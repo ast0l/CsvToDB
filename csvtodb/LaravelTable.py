@@ -1,7 +1,7 @@
 import re
-from CSV.Csv import Csv
-from DB.Table import Table
-from FRAMEWORK.Laravel.LaravelColumn import LaravelColumn
+from csvtodb.Csv import Csv
+from csvtodb.Table import Table
+from csvtodb.LaravelColumn import LaravelColumn
 
 
 class LaravelTable(Table, LaravelColumn):

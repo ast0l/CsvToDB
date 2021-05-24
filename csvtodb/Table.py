@@ -1,5 +1,5 @@
 import abc
-from CSV.Csv import Csv
+from csvtodb.Csv import Csv
 
 
 class Table:

@@ -92,18 +92,20 @@ For the foreign key column name must be => tableReference_id
 ### DBMS
 Example with mysql:
 #### Build new db
+
 ````python
-from CSV.Csv import Csv
-from DBMS.Mysql.Mysql import Mysql
+from Csv import Csv
+from Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_db(save_in='filepath', name='db_name')  # name is the db and filename
 ````
 
 #### Build new table
+
 ````python
-from CSV.Csv import Csv
-from DBMS.Mysql.Mysql import Mysql
+from Csv import Csv
+from Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 
@@ -113,21 +115,23 @@ Mysql.new_table(csv=csv, filename='filename', filepath='filepath', engine='InnoD
 ````
 
 #### Build multiple table
+
 ````python
-from CSV.Csv import Csv
-from DBMS.Mysql.Mysql import Mysql
+from Csv import Csv
+from Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_tables(filepath='save_in', filename='sql_filename', files={
-    'csv_files_path_1': ('filename1', 'filename2'),
-     'csv_files_path_2': ('filename1', 'filename2')
+  'csv_files_path_1': ('filename1', 'filename2'),
+  'csv_files_path_2': ('filename1', 'filename2')
 })
 ````
 
 #### Build new seeder
+
 ````python
-from CSV.Csv import Csv
-from DBMS.Mysql.Mysql import Mysql
+from Csv import Csv
+from Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_seeder(csv=csv, filename='filename', filepath='filepath')
@@ -137,11 +141,13 @@ Mysql.new_seeder(csv=csv, filename='filename', filepath='filepath')
 example with Laravel:
 
 #### Build new migration file
+
 ````python
-from CSV.Csv import Csv
-from FRAMEWORK.Laravel.Laravel import Laravel
+from Csv import Csv
+from Laravel import Laravel
+
 csv = Csv(filename='data_test', filepath='csv_file')
-Laravel.new_migration(csv=csv, 
-                      filepath='laravel_migration_folder', 
+Laravel.new_migration(csv=csv,
+                      filepath='laravel_migration_folder',
                       filename='laravel_migration_filename')
 ````

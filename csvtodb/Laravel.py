@@ -1,5 +1,5 @@
-from CSV import Csv
-from FRAMEWORK.Laravel.LaravelTable import LaravelTable
+from csvtodb.Csv import Csv
+from csvtodb.LaravelTable import LaravelTable
 
 
 class Laravel(LaravelTable):
