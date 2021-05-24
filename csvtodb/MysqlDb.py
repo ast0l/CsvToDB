@@ -1,6 +1,6 @@
-from DB.Database import Database
-from DBMS.Mysql.MysqlTable import MysqlTable
-from CSV.Csv import Csv
+from csvtodb.Database import Database
+from csvtodb.MysqlTable import MysqlTable
+from csvtodb.Csv import Csv
 
 
 class MysqlDb(Database, MysqlTable):

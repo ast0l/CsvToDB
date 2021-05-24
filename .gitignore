@@ -1,3 +1,8 @@
 /venv/
 /App.py
 /csv_file/
+/build/
+/dist/
+/csvtodb/CsvToDB.egg-info/
+/Csv_To_DB.egg-info/
+/csvtodb.egg-info/

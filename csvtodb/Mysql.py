@@ -1,7 +1,7 @@
 import re
 
-from CSV.Csv import Csv
-from DBMS.Mysql.MysqlDb import MysqlDb
+from csvtodb.Csv import Csv
+from csvtodb.MysqlDb import MysqlDb
 
 
 class Mysql(MysqlDb):

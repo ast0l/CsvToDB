@@ -1,7 +1,7 @@
 import re
-from DB.Table import Table
-from DBMS.Mysql.MysqlColumn import MysqlColumn
-from CSV.Csv import Csv
+from csvtodb.Table import Table
+from csvtodb.MysqlColumn import MysqlColumn
+from csvtodb.Csv import Csv
 
 
 class MysqlTable(Table, MysqlColumn):

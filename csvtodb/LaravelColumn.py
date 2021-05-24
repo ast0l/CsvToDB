@@ -1,5 +1,5 @@
 import re
-from DB.Column import Column
+from csvtodb.Column import Column
 
 
 class LaravelColumn(Column):
