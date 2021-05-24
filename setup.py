@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="Csv-To-DB",
-    version="0.0.4",
+    version="0.0.1",
     author="akk0ga",
     author_email="ttn.glock@orange.fr",
-    description="Make it easier to build database/table/seeders for DBMS or web framework",
+    description="Make it easier to build database/table/seeders for DBMS or framework like laravel",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://https://github.com/akk0ga/csv_parser",
+    url="https://github.com/akk0ga/CsvToDB",
     classifiers=[
         "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",

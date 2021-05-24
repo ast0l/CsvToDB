@@ -94,8 +94,8 @@ Example with mysql:
 #### Build new db
 
 ````python
-from Csv import Csv
-from Mysql import Mysql
+from csvtodb.Csv import Csv
+from csvtodb.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_db(save_in='filepath', name='db_name')  # name is the db and filename
@@ -104,8 +104,8 @@ Mysql.new_db(save_in='filepath', name='db_name')  # name is the db and filename
 #### Build new table
 
 ````python
-from Csv import Csv
-from Mysql import Mysql
+from csvtodb.Csv import Csv
+from csvtodb.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 
@@ -117,8 +117,8 @@ Mysql.new_table(csv=csv, filename='filename', filepath='filepath', engine='InnoD
 #### Build multiple table
 
 ````python
-from Csv import Csv
-from Mysql import Mysql
+from csvtodb.Csv import Csv
+from csvtodb.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_tables(filepath='save_in', filename='sql_filename', files={
@@ -130,8 +130,8 @@ Mysql.new_tables(filepath='save_in', filename='sql_filename', files={
 #### Build new seeder
 
 ````python
-from Csv import Csv
-from Mysql import Mysql
+from csvtodb.Csv import Csv
+from csvtodb.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_seeder(csv=csv, filename='filename', filepath='filepath')
@@ -143,8 +143,8 @@ example with Laravel:
 #### Build new migration file
 
 ````python
-from Csv import Csv
-from Laravel import Laravel
+from csvtodb.Csv import Csv
+from csvtodb.Laravel import Laravel
 
 csv = Csv(filename='data_test', filepath='csv_file')
 Laravel.new_migration(csv=csv,
