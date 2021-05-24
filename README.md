@@ -98,10 +98,8 @@ Example with mysql:
 #### Build new db
 
 ````python
-from csvtodb.Csv import Csv
 from csvtodb.Mysql import Mysql
 
-csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_db(save_in='filepath', db_name='db_name', files={
   'filepath1': (
     ('filename1', 'delimiter', 'quotechar'),
