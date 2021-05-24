@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="csvtodb",
-    version="1.0.0",
+    version="1.1.1",
     author="akk0ga",
     author_email="ttn.glock@orange.fr",
     description="Make it easier to build database/table/seeders for DBMS or framework like laravel",

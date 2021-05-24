@@ -24,6 +24,9 @@ SQL scripts to build table or create seeder for your database (you can build the
       <td>Mysql</td>
       <td><ul>
         <li>Innodb</li>
+        <li>MyISAM</li>
+        <li>Memory</li>
+        <li>CSV</li>
       </ul></td>
     <td>8.0</td>
     </tr>

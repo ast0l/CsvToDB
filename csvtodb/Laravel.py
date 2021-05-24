@@ -67,5 +67,38 @@ class Laravel(LaravelTable):
         return True
 
     @classmethod
-    def new_seeder(cls, csv: Csv, filepath: str, filename: str):
-        pass
+    def new_seeder(cls, csv: Csv, filepath: str, filename: str) -> bool:
+        """
+        build new seeder for laravel
+
+        :param csv: Csv
+        :param filepath: str
+        :param filename: str
+        :return: str
+        """
+        column_name = csv.column_name()
+        content = csv.row_list()
+        seeder = '<?php\n\n' \
+                 'use Illuminate\\Database\\Seeder;\n' \
+                 'use Illuminate\\Support\\Facades\\DB;\n\n' \
+                 f'class {filename} extends Seeder\n' \
+                 '{\n' \
+                 '\tpublic function run()\n' \
+                 '\t{\n' \
+                 f'\t\tDB::table("{csv.p_filename}")->insert([\n' \
+
+        for i in range(0, len(content)):
+            seeder += '\t\t\t[\n'
+            for j in range(0, len(content[i])):
+                    seeder += f'\t\t\t\t"{column_name[j]}" => "{content[i][j]}",\n'
+            seeder += '\t\t\t]\n' if i == len(content)-1 else '\t\t\t],\n'
+
+        seeder += '\t\t]);\n' \
+                  '\t}\n'
+        try:
+            with open(f'{filepath}/{filename}.php', 'w') as file:
+                file.write(seeder)
+            file.close()
+            return True
+        except Exception as e:
+            return False

@@ -5,6 +5,7 @@ from csvtodb.Csv import Csv
 
 
 class MysqlTable(Table, MysqlColumn):
+    __ENGINE: tuple = ('innodb', 'myisam', 'memory', 'csv')
 
     def __repr__(self):
         return 'class to build sql table for mysql'
@@ -13,42 +14,44 @@ class MysqlTable(Table, MysqlColumn):
     def _build_table(cls, csv: Csv, engine: str, temporary: bool) -> str:
         res: dict = {}
         columns: dict = cls._define_col_type(csv)
+        if engine.lower() in cls.__ENGINE:
+            for column in columns:
+                if columns[column]:
+                    if column == 'integer':
+                        for i in columns[column]:
+                            content: list = csv.column_content(column=i+1)
+                            name: str = content.pop(0)
+                            res[i] = f'{cls._integer(column_value=content, column_name=name)},\n'
+                    elif column == 'decimal':
+                        for i in columns[column]:
+                            content: list = csv.column_content(column=i+1)
+                            name: str = content.pop(0)
+                            res[i] = f'{cls._decimal(column_value=content, column_name=name)},\n'
+                    elif column == 'string':
+                        for i in columns[column]:
+                            content: list = csv.column_content(column=i+1)
+                            name: str = content.pop(0)
+                            res[i] = f'{cls._string(column_value=content, column_name=name)},\n'
+                    elif column == 'date':
+                        for i in columns[column]:
+                            content: list = csv.column_content(column=i+1)
+                            name: str = content.pop(0)
+                            res[i] = f'{cls._date(column_value=content, column_name=name)},\n'
+                    elif column == 'foreign':
+                        for i in columns[column]:
+                            content: list = csv.column_content(column=i+1)
+                            name: str = content.pop(0)
+                            res[i] = f'{cls._foreign(column_value=content, column_name=name)},\n'
 
-        for column in columns:
-            if columns[column]:
-                if column == 'integer':
-                    for i in columns[column]:
-                        content: list = csv.column_content(column=i+1)
-                        name: str = content.pop(0)
-                        res[i] = f'{cls._integer(column_value=content, column_name=name)},\n'
-                elif column == 'decimal':
-                    for i in columns[column]:
-                        content: list = csv.column_content(column=i+1)
-                        name: str = content.pop(0)
-                        res[i] = f'{cls._decimal(column_value=content, column_name=name)},\n'
-                elif column == 'string':
-                    for i in columns[column]:
-                        content: list = csv.column_content(column=i+1)
-                        name: str = content.pop(0)
-                        res[i] = f'{cls._string(column_value=content, column_name=name)},\n'
-                elif column == 'date':
-                    for i in columns[column]:
-                        content: list = csv.column_content(column=i+1)
-                        name: str = content.pop(0)
-                        res[i] = f'{cls._date(column_value=content, column_name=name)},\n'
-                elif column == 'foreign':
-                    for i in columns[column]:
-                        content: list = csv.column_content(column=i+1)
-                        name: str = content.pop(0)
-                        res[i] = f'{cls._foreign(column_value=content, column_name=name)},\n'
-
-        new_table: str = f'CREATE {"TEMPORARY" if temporary else ""} TABLE IF NOT EXISTS {csv.p_filename}('
-        new_table += f'\t{cls._primary()},\n'
-        res[max(res)] = res[max(res)][0:-2]+'\n'
-        for i in range(0, len(res)):
-            new_table += res[i]
-        new_table += f')ENGINE="{engine.upper()}";\n\n'
-        return new_table
+            new_table: str = f'CREATE {"TEMPORARY" if temporary else ""} TABLE IF NOT EXISTS {csv.p_filename}('
+            new_table += f'\t{cls._primary()},\n'
+            res[max(res)] = res[max(res)][0:-2]+'\n'
+            for i in range(0, len(res)):
+                new_table += res[i]
+            new_table += f')ENGINE="{engine.upper()}";\n\n'
+            return new_table
+        else:
+            raise ValueError(f'engine not supported')
 
     @classmethod
     def _define_col_type(cls, csv: Csv) -> dict:
@@ -90,8 +93,3 @@ class MysqlTable(Table, MysqlColumn):
                     col_type['date' if re.match(date_pattern, content[i], re.MULTILINE) else 'string'].append(i)
 
         return col_type
-
-
-if __name__ == '__main__':
-    file = Csv(filename='data_test', filepath='../../csv_file')
-    MysqlTable._build_table(csv=file, engine='', temporary=False)
