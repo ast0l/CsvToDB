@@ -15,11 +15,12 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        "Intended Audience :: Developers",
+        "Operating System :: Unix",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
     ],
     keywords=['csv', 'db', 'database', 'sql', 'framework', 'mysql'],
     py_modules=['Csv-To-DB'],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
 )
