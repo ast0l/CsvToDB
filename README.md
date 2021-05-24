@@ -3,6 +3,7 @@
 </p>
 
 # CSV to DB
+**install with: pip install csvtodb**
 With this package you will be able to get info from a csv file like the column name, or specific row, and update 
 your file with the possibility to add row or column.
 
@@ -97,10 +98,8 @@ Example with mysql:
 #### Build new db
 
 ````python
-from csvtodb.Csv import Csv
 from csvtodb.Mysql import Mysql
 
-csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_db(save_in='filepath', db_name='db_name', files={
   'filepath1': (
     ('filename1', 'delimiter', 'quotechar'),
