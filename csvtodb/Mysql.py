@@ -25,7 +25,7 @@ class Mysql(MysqlDb):
         """
         try:
             with open(f'{save_in}/{db_name}.sql', 'x') as file:
-                file.write(cls._build_db_table(db_name=db_name, files=files, engine=engine))
+                file.write(cls._build_db(db_name=db_name, files=files, engine=engine))
             file.close()
             return True
         except FileExistsError:
@@ -61,7 +61,7 @@ class Mysql(MysqlDb):
             return True
 
     @classmethod
-    def new_tables(cls, filepath: str, filename: str, files: dict):
+    def new_tables(cls, filepath: str, filename: str, files: dict, engine: str = 'INNODB'):
         """
         build multiple table from multiple csv file\n
 
@@ -73,21 +73,22 @@ class Mysql(MysqlDb):
 
         **files**\n
         content all files to build in table, it must be construct like this:\n
-        {
-         'path1':(filename1, filename2, etc...),\n
-         'path2':(filename1, filename2, etc...)\n
-         etc...\n
-         }\n
+        files need to be\n
+        {\n
+        'path_to_files_1': ((csv_filename_1, delimiter, quotechar), (csv_filename_1, delimiter, quotechar), etc...)\n
+        'path_to_files_2': ((csv_filename_1, delimiter, quotechar), (csv_filename_1, delimiter, quotechar), etc...)\n
+        }\n
 
         :return:
         """
-        table: list = []
-        csv = Csv(filepath='', filename='')
-        for path in files:
-            csv.p_filepath = path
-            for file in files[path]:
-                csv.p_filename = file
-                cls.new_table(csv=csv, filepath=filepath, filename=filename)
+        try:
+            with open(f'{filepath}/{filename}.sql', 'x') as file:
+                file.write(cls._build_tables(files=files, engine=engine))
+            file.close()
+        except FileExistsError:
+            with open(f'{filepath}/{filename}.sql', 'a') as file:
+                file.write(cls._build_tables(files=files, engine=engine))
+            file.close()
 
     @classmethod
     def new_seeder(cls, csv: Csv, filepath: str, filename: str):
