@@ -9,11 +9,7 @@ class MysqlDb(Database, MysqlTable):
         return 'class to build new db'
 
     @classmethod
-    def _build_db(cls, name: str) -> str:
-        return f'CREATE DATABASE {name};\n'
-
-    @classmethod
-    def _build_db_table(cls, db_name: str, files: dict, engine: str):
+    def _build_db(cls, db_name: str, files: dict, engine: str):
         """
         build new db with table
 
@@ -38,5 +34,26 @@ class MysqlDb(Database, MysqlTable):
         return file
 
     @classmethod
-    def _insert_db(cls) -> str:
-        return 'not implemented'
+    def _build_tables(cls, files: dict, engine: str):
+        """
+        build multiple table
+
+        **files:**\n
+        files need to be\n
+        {\n
+        'path_to_files_1': ((csv_filename_1, delimiter, quotechar), (csv_filename_1, delimiter, quotechar), etc...)\n
+        'path_to_files_2': ((csv_filename_1, delimiter, quotechar), (csv_filename_1, delimiter, quotechar), etc...)\n
+        }\n
+
+        :return:
+        """
+        csv = Csv(filename='', filepath='', delimiter='', quoter='')
+        file = ''
+        for i in files:
+            for j in range(0, len(files[i])):
+                csv.p_filepath = i
+                csv.p_filename = files[i][j][0]
+                csv.p_file_delimiter = files[i][j][1]
+                csv.p_file_quoter = files[i][j][2]
+                file += cls._build_table(csv=csv, engine=engine, temporary=False)
+        return file

@@ -98,7 +98,17 @@ from csvtodb.Csv import Csv
 from csvtodb.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
-Mysql.new_db(save_in='filepath', name='db_name')  # name is the db and filename
+Mysql.new_db(save_in='filepath', db_name='db_name', files={
+  'filepath1': (
+    ('filename1', 'delimiter', 'quotechar'),
+    ('filename2', 'delimiter', 'quotechar'),
+  ),
+    'filepath2': (
+    ('filename1', 'delimiter', 'quotechar'),
+    ('filename2', 'delimiter', 'quotechar'),
+  ),
+  # etc...
+})
 ````
 
 #### Build new table
@@ -122,9 +132,16 @@ from csvtodb.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_tables(filepath='save_in', filename='sql_filename', files={
-  'csv_files_path_1': ('filename1', 'filename2'),
-  'csv_files_path_2': ('filename1', 'filename2')
-})
+  'filepath1': (
+    ('filename1', 'delimiter', 'quotechar'),
+    ('filename2', 'delimiter', 'quotechar'),
+  ),
+    'filepath2': (
+    ('filename1', 'delimiter', 'quotechar'),
+    ('filename2', 'delimiter', 'quotechar'),
+  ),
+  # etc...
+}, engine='INNODB')  # engine default value is INNODB
 ````
 
 #### Build new seeder
