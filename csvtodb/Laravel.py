@@ -94,11 +94,13 @@ class Laravel(LaravelTable):
             seeder += '\t\t\t]\n' if i == len(content)-1 else '\t\t\t],\n'
 
         seeder += '\t\t]);\n' \
-                  '\t}\n'
+                  '\t}\n' \
+                  '}'
         try:
             with open(f'{filepath}/{filename}.php', 'w') as file:
                 file.write(seeder)
             file.close()
             return True
         except Exception as e:
+            print(e)
             return False
