@@ -158,7 +158,7 @@ Mysql.new_seeder(csv=csv, filename='filename', filepath='filepath')
 ````
 
 ### Framework
-example with Laravel:
+example with Laravel (absolute path is recommended to avoid error):
 
 #### Build new migration file
 
@@ -170,4 +170,16 @@ csv = Csv(filename='data_test', filepath='csv_file')
 Laravel.new_migration(csv=csv,
                       filepath='laravel_migration_folder',
                       filename='laravel_migration_filename')
+````
+
+#### Build new seeder file
+
+````python
+from csvtodb.Csv import Csv
+from csvtodb.Laravel import Laravel
+
+csv = Csv(filename='data_test', filepath='csv_file')
+Laravel.new_seeder(csv=csv,
+                   filepath='laravel_migration_folder',
+                   filename='laravel_migration_filename')
 ````
