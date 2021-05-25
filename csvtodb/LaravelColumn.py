@@ -87,7 +87,7 @@ class LaravelColumn(Column):
         is_text: bool = False
 
         for i in column_value:
-            if re.match(r'[\n\t]', column_value[i], re.MULTILINE):
+            if re.match(r'[\n\t]', column_value[column_value.index(i)], re.MULTILINE):
                 is_text = True
                 break
 
@@ -98,7 +98,7 @@ class LaravelColumn(Column):
                     column += f' {i}({max_val})'
                     break
         else:
-            column += f'{"char" if min_val == max_val and max_val <= cls.__STRING[0] else "string"}("{column_name}", {max_val})'
+            column += f'{"char" if min_val == max_val and max_val <= cls.__STRING["char"] else "string"}("{column_name}", {max_val})'
 
         # check if null
         if min_val == 0:
