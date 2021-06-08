@@ -25,8 +25,8 @@
    <widget class="QLabel" name="title_dbsm">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>20</y>
+      <x>10</x>
+      <y>50</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -47,8 +47,8 @@
    <widget class="QLabel" name="title_framework">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>190</y>
+      <x>10</x>
+      <y>200</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -69,8 +69,8 @@
    <widget class="QRadioButton" name="btn_mysql">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>100</y>
+      <x>10</x>
+      <y>90</y>
       <width>82</width>
       <height>17</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QRadioButton" name="btn_laravel">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>260</y>
+      <x>10</x>
+      <y>250</y>
       <width>82</width>
       <height>17</height>
      </rect>
@@ -95,14 +95,136 @@
    <widget class="QPushButton" name="send">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>360</y>
-      <width>151</width>
-      <height>61</height>
+      <x>0</x>
+      <y>400</y>
+      <width>631</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="text">
      <string>Generate</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_select_csv">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>60</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Select CSV</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="csv_filepath_display">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>60</y>
+      <width>231</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_migration_file">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>110</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>migration file</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_migration_file_2">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>150</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>seeder file</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="btn_dbsm_migration_seeder">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>190</y>
+      <width>231</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>migration</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>seeder</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>migration + seeder</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_migration_file">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>110</y>
+      <width>221</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_seeder_file">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>150</y>
+      <width>221</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_save_dbsm">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>230</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>save in</string>
     </property>
    </widget>
   </widget>

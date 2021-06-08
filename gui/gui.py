@@ -9,12 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from csvtodb.Laravel import Laravel
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        # window opt
+        # set main window
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(637, 479)
         font = QtGui.QFont()
@@ -24,12 +23,13 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         MainWindow.setFont(font)
 
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         # title dbsm
         self.title_dbsm = QtWidgets.QLabel(self.centralwidget)
-        self.title_dbsm.setGeometry(QtCore.QRect(280, 20, 91, 31))
+        self.title_dbsm.setGeometry(QtCore.QRect(10, 50, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Amiri")
         font.setPointSize(20)
@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
 
         # title framework
         self.title_framework = QtWidgets.QLabel(self.centralwidget)
-        self.title_framework.setGeometry(QtCore.QRect(260, 190, 131, 31))
+        self.title_framework.setGeometry(QtCore.QRect(10, 200, 131, 31))
         font = QtGui.QFont()
         font.setFamily("Amiri")
         font.setPointSize(20)
@@ -51,21 +51,66 @@ class Ui_MainWindow(object):
         self.title_framework.setFont(font)
         self.title_framework.setObjectName("title_framework")
 
-        # radio btn mysql
+        # mysql
         self.btn_mysql = QtWidgets.QRadioButton(self.centralwidget)
-        self.btn_mysql.setGeometry(QtCore.QRect(280, 100, 82, 17))
+        self.btn_mysql.setGeometry(QtCore.QRect(10, 90, 82, 17))
         self.btn_mysql.setObjectName("btn_mysql")
 
-        # radio btn mysql
+        # laravel
         self.btn_laravel = QtWidgets.QRadioButton(self.centralwidget)
-        self.btn_laravel.setGeometry(QtCore.QRect(280, 260, 82, 17))
+        self.btn_laravel.setGeometry(QtCore.QRect(10, 250, 82, 17))
         self.btn_laravel.setObjectName("btn_laravel")
 
         # send btn
         self.send = QtWidgets.QPushButton(self.centralwidget)
-        self.send.setGeometry(QtCore.QRect(240, 360, 151, 61))
+        self.send.setGeometry(QtCore.QRect(0, 400, 631, 71))
         self.send.setObjectName("send")
-        self.send.clicked.connect(self.generate)
+
+        # select csv btn
+        self.btn_select_csv = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_select_csv.setGeometry(QtCore.QRect(290, 60, 75, 23))
+        self.btn_select_csv.setObjectName("btn_select_csv")
+
+        # display csv filepath
+        self.csv_filepath_display = QtWidgets.QLineEdit(self.centralwidget)
+        self.csv_filepath_display.setEnabled(True)
+        self.csv_filepath_display.setGeometry(QtCore.QRect(370, 60, 231, 20))
+        self.csv_filepath_display.setText("")
+        self.csv_filepath_display.setReadOnly(False)
+        self.csv_filepath_display.setObjectName("csv_filepath_display")
+
+        # btn migration file for framework
+        self.btn_migration_file = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_migration_file.setGeometry(QtCore.QRect(290, 110, 111, 23))
+        self.btn_migration_file.setObjectName("btn_migration_file")
+
+        # btn seeder file for framework
+        self.btn_seeder_file = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_seeder_file.setGeometry(QtCore.QRect(290, 150, 111, 23))
+        self.btn_seeder_file.setObjectName("btn_seeder_file")
+
+        # select migration seeder for dbsm
+        self.select_migration_seeder = QtWidgets.QComboBox(self.centralwidget)
+        self.select_migration_seeder.setGeometry(QtCore.QRect(290, 190, 231, 22))
+        self.select_migration_seeder.setObjectName("btn_dbsm_migration_seeder")
+        self.select_migration_seeder.addItem("")
+        self.select_migration_seeder.addItem("")
+        self.select_migration_seeder.addItem("")
+
+        # display migration filepath for framework
+        self.label_migration_file = QtWidgets.QLabel(self.centralwidget)
+        self.label_migration_file.setGeometry(QtCore.QRect(410, 110, 221, 16))
+        self.label_migration_file.setObjectName("label_migration_file")
+
+        # display seeder filepath for framework
+        self.label_seeder_file = QtWidgets.QLabel(self.centralwidget)
+        self.label_seeder_file.setGeometry(QtCore.QRect(410, 150, 221, 16))
+        self.label_seeder_file.setObjectName("label_seeder_file")
+
+        # save in for dbsm
+        self.btn_save_dbsm = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_save_dbsm.setGeometry(QtCore.QRect(290, 230, 111, 23))
+        self.btn_save_dbsm.setObjectName("btn_save_dbsm")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -79,16 +124,20 @@ class Ui_MainWindow(object):
         self.btn_mysql.setText(_translate("MainWindow", "Mysql"))
         self.btn_laravel.setText(_translate("MainWindow", "Laravel"))
         self.send.setText(_translate("MainWindow", "Generate"))
+        self.btn_select_csv.setText(_translate("MainWindow", "Select CSV"))
+        self.btn_migration_file.setText(_translate("MainWindow", "migration file"))
+        self.btn_seeder_file.setText(_translate("MainWindow", "seeder file"))
+        self.select_migration_seeder.setItemText(0, _translate("MainWindow", "migration"))
+        self.select_migration_seeder.setItemText(1, _translate("MainWindow", "seeder"))
+        self.select_migration_seeder.setItemText(2, _translate("MainWindow", "migration + seeder"))
+        self.label_migration_file.setText(_translate("MainWindow", "TextLabel"))
+        self.label_seeder_file.setText(_translate("MainWindow", "TextLabel"))
+        self.btn_save_dbsm.setText(_translate("MainWindow", "save in"))
 
-    def generate(self):
-        """
-        generate content from the csv when we clicked on the send button
-        :return:
-        """
-        if self.btn_mysql.isChecked():
-            print('mysql')
-        elif self.btn_laravel.isChecked():
-            print('laravel')
+    # -------------------------------
+    # method for btn
+    # -------------------------------
+
 
 
 if __name__ == "__main__":
