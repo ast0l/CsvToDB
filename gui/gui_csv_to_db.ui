@@ -150,7 +150,7 @@
      <string>migration file</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_migration_file_2">
+   <widget class="QPushButton" name="btn_seeder_file">
     <property name="geometry">
      <rect>
       <x>290</x>
@@ -225,6 +225,19 @@
     </property>
     <property name="text">
      <string>save in</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_save_in">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>260</y>
+      <width>341</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
     </property>
    </widget>
   </widget>

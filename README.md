@@ -1,6 +1,9 @@
+
 <p align="center">
 <img src="image.png" alt="drawing" width="200"/>
 </p>
+
+![GitHub](https://img.shields.io/github/license/akk0ga/CsvToDB)
 
 # CSV to DB
 **install with: pip install csvtodb**
@@ -182,3 +185,19 @@ Laravel.new_seeder(csv=csv,
                    filepath='laravel_migration_folder',
                    filename='laravel_migration_filename')
 ````
+
+#### Build new seeder file
+
+````python
+from csvtodb.Csv import Csv
+from csvtodb.Laravel import Laravel
+
+csv = Csv(filename='data_test', filepath='csv_file')
+Laravel.new_seeder(csv=csv,
+                   filepath='laravel_migration_folder',
+                   filename='laravel_migration_filename')
+````
+
+## GUI APP
+If you only want to convert it without coding you can use the gui app available with qt.ui for QtDesigner file
+if you want to modify the ux/ui it as you want ! ^^
