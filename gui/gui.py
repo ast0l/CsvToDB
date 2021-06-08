@@ -9,10 +9,12 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from csvtodb.Laravel import Laravel
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        # window opt
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(637, 479)
         font = QtGui.QFont()
@@ -21,8 +23,11 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         MainWindow.setFont(font)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        # title dbsm
         self.title_dbsm = QtWidgets.QLabel(self.centralwidget)
         self.title_dbsm.setGeometry(QtCore.QRect(280, 20, 91, 31))
         font = QtGui.QFont()
@@ -33,6 +38,8 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.title_dbsm.setFont(font)
         self.title_dbsm.setObjectName("title_dbsm")
+
+        # title framework
         self.title_framework = QtWidgets.QLabel(self.centralwidget)
         self.title_framework.setGeometry(QtCore.QRect(260, 190, 131, 31))
         font = QtGui.QFont()
@@ -43,15 +50,22 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.title_framework.setFont(font)
         self.title_framework.setObjectName("title_framework")
+
+        # radio btn mysql
         self.btn_mysql = QtWidgets.QRadioButton(self.centralwidget)
         self.btn_mysql.setGeometry(QtCore.QRect(280, 100, 82, 17))
         self.btn_mysql.setObjectName("btn_mysql")
+
+        # radio btn mysql
         self.btn_laravel = QtWidgets.QRadioButton(self.centralwidget)
         self.btn_laravel.setGeometry(QtCore.QRect(280, 260, 82, 17))
         self.btn_laravel.setObjectName("btn_laravel")
+
+        # send btn
         self.send = QtWidgets.QPushButton(self.centralwidget)
         self.send.setGeometry(QtCore.QRect(240, 360, 151, 61))
         self.send.setObjectName("send")
+        self.send.clicked.connect(self.generate)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -65,6 +79,16 @@ class Ui_MainWindow(object):
         self.btn_mysql.setText(_translate("MainWindow", "Mysql"))
         self.btn_laravel.setText(_translate("MainWindow", "Laravel"))
         self.send.setText(_translate("MainWindow", "Generate"))
+
+    def generate(self):
+        """
+        generate content from the csv when we clicked on the send button
+        :return:
+        """
+        if self.btn_mysql.isChecked():
+            print('mysql')
+        elif self.btn_laravel.isChecked():
+            print('laravel')
 
 
 if __name__ == "__main__":
