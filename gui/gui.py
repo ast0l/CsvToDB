@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from csvtodb.Mysql import Mysql
+from csvtodb.Laravel import Laravel
 from csvtodb.Csv import Csv
 import re
 
@@ -218,16 +219,16 @@ class Ui_MainWindow(object):
 
         :return:
         """
+        filename = re.findall(r'[\w-]+\.csv', self.csv_filepath_display.text())
+        filepath = re.sub(r'[\/\\][\w-]+\.csv', '', self.csv_filepath_display.text(), 0)
+        for name in filename:
+            filename = re.sub(r'\.csv', '', name)
+        csv = Csv(filename=filename, filepath=filepath)
+
         # mysql
         if self.btn_mysql.isChecked():
             if self.label_save_in.text():
-                # csv general info
-                filename = re.findall(r'[\w-]+\.csv', self.csv_filepath_display.text())
-                filepath = re.sub(r'[\/\\][\w-]+\.csv', '', self.csv_filepath_display.text(), 0)
                 save_in = self.label_save_in.text()
-                for name in filename:
-                    filename = re.sub(r'\.csv', '', name)
-                csv = Csv(filename=filename, filepath=filepath)
                 if self.select_migration_seeder.currentText() == 'migration':
                     print(filename, filepath)
                     Mysql.new_table(csv=csv, filename=filename, filepath=save_in)
@@ -238,12 +239,18 @@ class Ui_MainWindow(object):
                 elif self.select_migration_seeder.currentText() == 'migration + seeder':
                     Mysql.new_table(csv=csv, filename=filename, filepath=save_in)
                     Mysql.new_seeder(csv=csv, filename=filename, filepath=save_in)
+
         # laravel
         elif self.btn_laravel.isChecked():
+            filename = re.findall(r'[\w-]+\.php', self.label_migration_file.text())
+            filepath = re.sub(r'[\/\\][\w-]+\.php', '', self.label_seeder_file.text(), 0)
+            for name in filename:
+                filename = re.sub(r'\.php', '', name)
+
             if self.label_migration_file.text():
-                print('launch migration')
+                Laravel.new_migration(csv=csv, filename=filename, filepath=filepath)
             if self.label_seeder_file.text():
-                print('launch seeder')
+                Laravel.new_seeder(csv=csv, filename=filename, filepath=filepath)
 
 
 if __name__ == "__main__":
