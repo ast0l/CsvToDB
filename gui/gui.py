@@ -70,6 +70,7 @@ class Ui_MainWindow(object):
         self.btn_select_csv = QtWidgets.QPushButton(self.centralwidget)
         self.btn_select_csv.setGeometry(QtCore.QRect(290, 60, 75, 23))
         self.btn_select_csv.setObjectName("btn_select_csv")
+        self.btn_select_csv.clicked.connect(self.browse_file)
 
         # display csv filepath
         self.csv_filepath_display = QtWidgets.QLineEdit(self.centralwidget)
@@ -138,6 +139,14 @@ class Ui_MainWindow(object):
     # method for btn
     # -------------------------------
 
+    def browse_file(self):
+        """
+        open folder dialog menu
+
+        :return:
+        """
+        file = QtWidgets.QFileDialog.getOpenFileName(caption='Select CSV file', directory='D:\\')
+        self.csv_filepath_display.setText(file[0])
 
 
 if __name__ == "__main__":
