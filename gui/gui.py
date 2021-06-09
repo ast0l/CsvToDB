@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
 
         # select migration seeder for dbsm
         self.select_migration_seeder = QtWidgets.QComboBox(self.centralwidget)
-        self.select_migration_seeder.setGeometry(QtCore.QRect(290, 190, 231, 22))
+        self.select_migration_seeder.setGeometry(QtCore.QRect(290, 150, 120, 23))
         self.select_migration_seeder.setObjectName("btn_dbsm_migration_seeder")
         self.select_migration_seeder.addItem("")
         self.select_migration_seeder.addItem("")
@@ -111,27 +111,27 @@ class Ui_MainWindow(object):
         self.select_migration_seeder.setVisible(False)
 
         # display migration filepath for framework
-        self.label_migration_file = QtWidgets.QLabel(self.centralwidget)
+        self.label_migration_file = QtWidgets.QLineEdit(self.centralwidget)
         self.label_migration_file.setGeometry(QtCore.QRect(410, 110, 221, 16))
         self.label_migration_file.setObjectName("label_migration_file")
         self.label_migration_file.setVisible(False)
 
         # display seeder filepath for framework
-        self.label_seeder_file = QtWidgets.QLabel(self.centralwidget)
+        self.label_seeder_file = QtWidgets.QLineEdit(self.centralwidget)
         self.label_seeder_file.setGeometry(QtCore.QRect(410, 150, 221, 16))
         self.label_seeder_file.setObjectName("label_seeder_file")
         self.label_seeder_file.setVisible(False)
 
         # save in for dbsm
         self.btn_save_dbsm = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_save_dbsm.setGeometry(QtCore.QRect(290, 230, 111, 23))
+        self.btn_save_dbsm.setGeometry(QtCore.QRect(290, 110, 111, 23))
         self.btn_save_dbsm.setObjectName("btn_save_dbsm")
         self.btn_save_dbsm.setVisible(False)
         self.btn_save_dbsm.clicked.connect(self.save_in)
 
         # label for save in
-        self.label_save_in = QtWidgets.QLabel(self.centralwidget)
-        self.label_save_in.setGeometry(QtCore.QRect(290, 260, 341, 16))
+        self.label_save_in = QtWidgets.QLineEdit(self.centralwidget)
+        self.label_save_in.setGeometry(QtCore.QRect(410, 110, 221, 16))
         self.label_save_in.setObjectName("label_migration_file")
         self.label_save_in.setVisible(False)
 
@@ -142,7 +142,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Csv To DB"))
         self.title_dbsm.setText(_translate("MainWindow", "DBSM"))
         self.title_framework.setText(_translate("MainWindow", "Framework"))
         self.btn_mysql.setText(_translate("MainWindow", "Mysql"))
