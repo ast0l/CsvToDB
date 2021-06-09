@@ -203,3 +203,8 @@ If you only want to convert it without coding you can use the gui app available 
 if you want to modify the ux/ui it as you want ! ^^
 
 For downloading the gui you only need to download the .rar in gui folder
+
+If you want to build it by yourself **go with your command line in the gui folder** and run this:
+```
+python setup.py build
+```
