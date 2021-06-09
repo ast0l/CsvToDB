@@ -167,8 +167,8 @@
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>190</y>
-      <width>231</width>
+      <y>150</y>
+      <width>121</width>
       <height>22</height>
      </rect>
     </property>
@@ -188,37 +188,11 @@
      </property>
     </item>
    </widget>
-   <widget class="QLabel" name="label_migration_file">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>110</y>
-      <width>221</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_seeder_file">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>150</y>
-      <width>221</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btn_save_dbsm">
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>230</y>
+      <y>110</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -227,17 +201,23 @@
      <string>save in</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_save_in">
+   <widget class="QLineEdit" name="csv_filepath_display_2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>260</y>
-      <width>341</width>
-      <height>16</height>
+      <x>410</x>
+      <y>110</y>
+      <width>211</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
