@@ -201,3 +201,5 @@ Laravel.new_seeder(csv=csv,
 ## GUI APP
 If you only want to convert it without coding you can use the gui app available with qt.ui for QtDesigner file
 if you want to modify the ux/ui it as you want ! ^^
+
+For downloading the gui you only need to download the .rar in gui folder
