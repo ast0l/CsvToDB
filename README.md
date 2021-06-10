@@ -5,11 +5,10 @@
 
 ![GitHub](https://img.shields.io/github/license/akk0ga/CsvToDB)
 
+# CSV to DB
 ```
 pip install csvtodb
 ```
-
-# CSV to DB
 With this package you will be able to get info from a csv file like the column name, or specific row, and update 
 your file with the possibility to add row or column.
 
