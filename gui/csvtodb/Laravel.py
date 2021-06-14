@@ -79,6 +79,7 @@ class Laravel(LaravelTable):
         column_name = csv.column_name()
         content = csv.row_list()
         seeder = '<?php\n\n' \
+                 'namespace Database\\Seeders;\n\n' \
                  'use Illuminate\\Database\\Seeder;\n' \
                  'use Illuminate\\Support\\Facades\\DB;\n\n' \
                  f'class {filename} extends Seeder\n' \

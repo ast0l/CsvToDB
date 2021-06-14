@@ -242,15 +242,17 @@ class Ui_MainWindow(object):
 
         # laravel
         elif self.btn_laravel.isChecked():
-            filename = re.findall(r'[\w-]+\.php', self.label_migration_file.text())
-            filepath = re.sub(r'[\/\\][\w-]+\.php', '', self.label_migration_file.text(), 0)
-            for name in filename:
-                filename = re.sub(r'\.php', '', name)
-
             if self.label_migration_file.text():
-                print(filename, filepath)
+                filename = re.findall(r'[\w-]+\.php', self.label_migration_file.text())
+                filepath = re.sub(r'[\/\\][\w-]+\.php', '', self.label_migration_file.text(), 0)
+                for name in filename:
+                    filename = re.sub(r'\.php', '', name)
                 Laravel.new_migration(csv=csv, filename=filename, filepath=filepath)
             if self.label_seeder_file.text():
+                filename = re.findall(r'[\w-]+\.php', self.label_seeder_file.text())
+                filepath = re.sub(r'[\/\\][\w-]+\.php', '', self.label_seeder_file.text(), 0)
+                for name in filename:
+                    filename = re.sub(r'\.php', '', name)
                 Laravel.new_seeder(csv=csv, filename=filename, filepath=filepath)
 
 
