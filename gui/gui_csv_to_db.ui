@@ -159,6 +159,9 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhNone</set>
+    </property>
     <property name="text">
      <string>seeder file</string>
     </property>
@@ -167,7 +170,7 @@
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>150</y>
+      <y>160</y>
       <width>121</width>
       <height>22</height>
      </rect>
@@ -218,6 +221,75 @@
     </property>
     <property name="readOnly">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="dbsm_create_db">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>200</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>create DB</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="btn_engine_dbsm">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>160</y>
+      <width>121</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>INNODB</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>MyIsam</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Memory</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>CSV</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>140</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Select engine</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>140</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>create</string>
     </property>
    </widget>
   </widget>

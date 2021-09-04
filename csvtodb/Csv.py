@@ -1,15 +1,27 @@
-import csv
+import csv as c
 import json
 import re
+import os
 
 
 class Csv:
+    def __init__(self, filename: str, disk_location: str = "C", delimiter: str = ',', quotechar: str = '"'):
 
-    def __init__(self, filename: str, filepath: str, delimiter: str = ',', quoter: str = '"'):
+        # check if the given string is a disk
+        if not bool(re.match(r"^[aA-zZ]$", disk_location, re.MULTILINE)):
+            raise ValueError("This is not a disk")
+
+        # locate file in the system
+        filepath: str = ""
+        for root, _, files in os.walk(f"{disk_location.capitalize()}:"):
+            if filename in files:
+                filepath = os.getcwd()
+                break
+
         self.__filename: str = filename
-        self.__filepath: str = filepath
+        self.__file: str = f"{filepath}\\{filename}"
         self.__delimiter: str = delimiter
-        self.__quoter: str = quoter
+        self.__quotechar: str = quotechar
 
     def __repr__(self):
         return 'class to edit or read csv data'
@@ -19,9 +31,9 @@ class Csv:
         return total column in the csv
         :return: int
         """
-        return len(tuple(csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'),
-                                    delimiter=self.__delimiter,
-                                    quotechar=self.__quoter))[0])
+        with open(self.__file, 'r') as f:
+            for r in c.reader(f, delimiter=self.__delimiter, quotechar=self.__quotechar):
+                return len(r)
 
     def row_list(self, limit: int = 0) -> tuple:
         """
@@ -34,13 +46,13 @@ class Csv:
         :return:
         """
         if limit > 0:
-            return tuple(csv.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                    delimiter=self.__delimiter,
-                                    quotechar=self.__quoter))[1:limit + 1]
+            return tuple(c.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
+                                  delimiter=self.__delimiter,
+                                  quotechar=self.__quoter))[1:limit + 1]
         else:
-            return tuple(csv.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                    delimiter=self.__delimiter,
-                                    quotechar=self.__quoter))[1:]
+            return tuple(c.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
+                                  delimiter=self.__delimiter,
+                                  quotechar=self.__quoter))[1:]
 
     def column_content(self, column: int):
         """
@@ -153,7 +165,9 @@ class Csv:
         :return:
         """
         try:
-            csv_data: list = list(csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'), delimiter=self.__delimiter, quotechar=self.__quoter))
+            csv_data: list = list(
+                csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'), delimiter=self.__delimiter,
+                           quotechar=self.__quoter))
             if len(data) == len(csv_data[0]):
                 csv_data.append(data) if not start else csv_data.insert(1, data)
             else:
@@ -195,7 +209,8 @@ class Csv:
                     raise ValueError('new must contain str or int value only')
 
         try:
-            csv_data = list(csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'), delimiter=self.__delimiter, quotechar=self.__quoter))
+            csv_data = list(csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'), delimiter=self.__delimiter,
+                                       quotechar=self.__quoter))
 
             if row == 0:
                 if isinstance(old, str):
@@ -348,3 +363,9 @@ class Csv:
     p_filename = property(fget=get_filename, fset=set_filename)
     p_file_delimiter = property(fget=get_delimiter, fset=set_delimiter)
     p_file_quoter = property(fget=get_quoter, fset=set_quoter)
+
+
+if __name__ == "__main__":
+    csv = Csv(disk_location="d", filename="username.csv", delimiter=";")
+
+    print(csv.total_column())
