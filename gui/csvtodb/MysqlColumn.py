@@ -1,5 +1,5 @@
 import re
-from csvtodb.Column import Column
+from generic.Column import Column
 
 
 class MysqlColumn(Column):

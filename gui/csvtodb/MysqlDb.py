@@ -1,5 +1,5 @@
-from csvtodb.Database import Database
-from csvtodb.MysqlTable import MysqlTable
+from generic.Database import Database
+from mysql.MysqlTable import MysqlTable
 from csvtodb.Csv import Csv
 
 

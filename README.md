@@ -101,18 +101,18 @@ Example with mysql:
 #### Build new db
 
 ````python
-from csvtodb.Mysql import Mysql
+from mysql.Mysql import Mysql
 
 Mysql.new_db(save_in='filepath', db_name='db_name', files={
-  'filepath1': (
-    ('filename1', 'delimiter', 'quotechar'),
-    ('filename2', 'delimiter', 'quotechar'),
-  ),
+    'filepath1': (
+        ('filename1', 'delimiter', 'quotechar'),
+        ('filename2', 'delimiter', 'quotechar'),
+    ),
     'filepath2': (
-    ('filename1', 'delimiter', 'quotechar'),
-    ('filename2', 'delimiter', 'quotechar'),
-  ),
-  # etc...
+        ('filename1', 'delimiter', 'quotechar'),
+        ('filename2', 'delimiter', 'quotechar'),
+    ),
+    # etc...
 })
 ````
 
@@ -120,7 +120,7 @@ Mysql.new_db(save_in='filepath', db_name='db_name', files={
 
 ````python
 from csvtodb.Csv import Csv
-from csvtodb.Mysql import Mysql
+from mysql.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 
@@ -133,19 +133,19 @@ Mysql.new_table(csv=csv, filename='filename', filepath='filepath', engine='InnoD
 
 ````python
 from csvtodb.Csv import Csv
-from csvtodb.Mysql import Mysql
+from mysql.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_tables(filepath='save_in', filename='sql_filename', files={
-  'filepath1': (
-    ('filename1', 'delimiter', 'quotechar'),
-    ('filename2', 'delimiter', 'quotechar'),
-  ),
+    'filepath1': (
+        ('filename1', 'delimiter', 'quotechar'),
+        ('filename2', 'delimiter', 'quotechar'),
+    ),
     'filepath2': (
-    ('filename1', 'delimiter', 'quotechar'),
-    ('filename2', 'delimiter', 'quotechar'),
-  ),
-  # etc...
+        ('filename1', 'delimiter', 'quotechar'),
+        ('filename2', 'delimiter', 'quotechar'),
+    ),
+    # etc...
 }, engine='INNODB')  # engine default value is INNODB
 ````
 
@@ -153,7 +153,7 @@ Mysql.new_tables(filepath='save_in', filename='sql_filename', files={
 
 ````python
 from csvtodb.Csv import Csv
-from csvtodb.Mysql import Mysql
+from mysql.Mysql import Mysql
 
 csv = Csv(filename='filename', filepath='filepath')
 Mysql.new_seeder(csv=csv, filename='filename', filepath='filepath')
@@ -166,7 +166,7 @@ example with Laravel (absolute path is recommended to avoid error):
 
 ````python
 from csvtodb.Csv import Csv
-from csvtodb.Laravel import Laravel
+from laravel.Laravel import Laravel
 
 csv = Csv(filename='data_test', filepath='csv_file')
 Laravel.new_migration(csv=csv,
@@ -178,7 +178,7 @@ Laravel.new_migration(csv=csv,
 
 ````python
 from csvtodb.Csv import Csv
-from csvtodb.Laravel import Laravel
+from laravel.Laravel import Laravel
 
 csv = Csv(filename='data_test', filepath='csv_file')
 Laravel.new_seeder(csv=csv,
@@ -190,7 +190,7 @@ Laravel.new_seeder(csv=csv,
 
 ````python
 from csvtodb.Csv import Csv
-from csvtodb.Laravel import Laravel
+from laravel.Laravel import Laravel
 
 csv = Csv(filename='data_test', filepath='csv_file')
 Laravel.new_seeder(csv=csv,

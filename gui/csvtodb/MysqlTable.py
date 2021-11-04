@@ -1,6 +1,6 @@
 import re
-from csvtodb.Table import Table
-from csvtodb.MysqlColumn import MysqlColumn
+from generic.Table import Table
+from mysql.MysqlColumn import MysqlColumn
 from csvtodb.Csv import Csv
 
 

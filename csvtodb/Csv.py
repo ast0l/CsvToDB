@@ -54,33 +54,12 @@ class Csv:
                                   delimiter=self.__delimiter,
                                   quotechar=self.__quoter))[1:]
 
-    def column_content(self, column: int):
-        """
-        return all row for one column\n
-
-        **column -> int:**\n
-        this param must contain column index from your file
-        column index start at 1 not 0\n
-
-        :param column: str
-        :return: dict
-        """
-        column -= 1
-        data: list = []
-        with open(f'{self.__filepath}/{self.__filename}.csv', 'r') as file:
-            read = csv.reader(file, delimiter=self.__delimiter, quotechar=self.__quoter)
-            for row in read:
-                data.append(row[column])
-        file.close()
-        return data
-
     def column_name(self) -> tuple:
         """
         return name of column
         :return:
         """
-        column: tuple = tuple(csv.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                         delimiter=self.__delimiter, quotechar=self.__quoter))[0]
+        column: tuple = tuple(c.reader(open(self.__file, 'r'), delimiter=self.__delimiter, quotechar=self.__quoter))[0]
         return tuple(column)
 
     def total_row(self) -> int:
@@ -89,8 +68,8 @@ class Csv:
 
         :return:
         """
-        return len(tuple(csv.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                    delimiter=self.__delimiter, quotechar=self.__quoter)))
+        return len(tuple(c.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
+                                  delimiter=self.__delimiter, quotechar=self.__quoter)))
 
     def update_column_name(self, old, new):
         """
@@ -172,64 +151,6 @@ class Csv:
                 csv_data.append(data) if not start else csv_data.insert(1, data)
             else:
                 raise ValueError(f'your data list must have {len(csv_data[0])} column')
-            csv.writer(open(f'{self.__filepath}/{self.__filename}', 'w', newline='')).writerows(csv_data)
-        except csv.Error as e:
-            print(e)
-
-    def update_row(self, old, new, row: int = 0):
-        """
-        change value in row for one or more data
-
-        **old:**\n
-        the actual value in the row\n
-
-        **new:**\n
-        the new value to set in the row\n
-
-        **row:**\n
-        the line where to do the changes if row = 0 the modification are done on all row\n
-
-        :return:
-        """
-        # check type
-        if not isinstance(old, str) and not isinstance(old, tuple):
-            raise TypeError('old must be str or tuple')
-        if not isinstance(new, str) and not isinstance(new, tuple):
-            raise TypeError('new must be str or tuple')
-        if type(old) != type(new):
-            raise TypeError('old and new must have same type')
-        if isinstance(old, tuple):
-            if len(old) != len(new):
-                raise ValueError('old and new must have same length')
-            for elem in old:
-                if not isinstance(elem, str) and not isinstance(elem, int):
-                    raise ValueError('old must contain str or int value only')
-            for elem in new:
-                if not isinstance(elem, str) and not isinstance(elem, int):
-                    raise ValueError('new must contain str or int value only')
-
-        try:
-            csv_data = list(csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'), delimiter=self.__delimiter,
-                                       quotechar=self.__quoter))
-
-            if row == 0:
-                if isinstance(old, str):
-                    for elem in csv_data:
-                        if old in elem:
-                            elem[elem.index(old)] = new
-                else:
-                    for elem in csv_data:
-                        for value in old:
-                            if value in elem:
-                                elem[elem.index(value)] = new[old.index(value)]
-            else:
-                if isinstance(old, str) and old in csv_data[row]:
-                    csv_data[row][csv_data[row].index(old)] = new
-                else:
-                    for value in old:
-                        if value in csv_data[row]:
-                            csv_data[row][csv_data[row].index(value)] = new[old.index(value)]
-
             csv.writer(open(f'{self.__filepath}/{self.__filename}', 'w', newline='')).writerows(csv_data)
         except csv.Error as e:
             print(e)
@@ -368,4 +289,4 @@ class Csv:
 if __name__ == "__main__":
     csv = Csv(disk_location="d", filename="username.csv", delimiter=";")
 
-    print(csv.total_column())
+    print(csv.sniff())
