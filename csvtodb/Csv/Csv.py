@@ -5,26 +5,24 @@ import os
 
 
 class Csv:
-    def __init__(self, filename: str, disk_location: str = "C", delimiter: str = ',', quotechar: str = '"'):
+    def __init__(self, file_absolute_path: str, delimiter: str = ',', quotechar: str = '"'):
+        """
+        file **must** be absolute path
+        :param file_absolute_path:
+        :param delimiter:
+        :param quotechar:
+        """
+        # check path validity
+        if re.match(r'^[aA-zZ]:\\$', file_absolute_path[:3], re.MULTILINE) and re.match(r'\.csv$', file_absolute_path[:-4], re.MULTILINE):
+            self.__file = file_absolute_path
+        else:
+            raise ValueError('Incorrect file path')
 
-        # check if the given string is a disk
-        if not bool(re.match(r"^[aA-zZ]$", disk_location, re.MULTILINE)):
-            raise ValueError("This is not a disk")
-
-        # locate file in the system
-        filepath: str = ""
-        for root, _, files in os.walk(f"{disk_location.capitalize()}:"):
-            if filename in files:
-                filepath = os.getcwd()
-                break
-
-        self.__filename: str = filename
-        self.__file: str = f"{filepath}\\{filename}"
         self.__delimiter: str = delimiter
         self.__quotechar: str = quotechar
 
     def __repr__(self):
-        return 'class to edit or read csv data'
+        return 'class for editing or reading csv data'
 
     def total_column(self) -> int:
         """
@@ -238,20 +236,6 @@ class Csv:
         """
         return self.__filepath
 
-    def set_filename(self, filename: str):
-        """
-        set _filename to use
-        :param filename:
-        """
-        self.__filename = filename
-
-    def get_filename(self) -> str:
-        """
-        return _filename used
-        :return: str
-        """
-        return self.__filename
-
     def set_delimiter(self, delimiter: str):
         """
         set delimiter in the file
@@ -281,12 +265,5 @@ class Csv:
         return self.__quoter
 
     p_filepath = property(fget=get_filepath, fset=set_filepath)
-    p_filename = property(fget=get_filename, fset=set_filename)
     p_file_delimiter = property(fget=get_delimiter, fset=set_delimiter)
     p_file_quoter = property(fget=get_quoter, fset=set_quoter)
-
-
-if __name__ == "__main__":
-    csv = Csv(disk_location="d", filename="username.csv", delimiter=";")
-
-    print(csv.sniff())
