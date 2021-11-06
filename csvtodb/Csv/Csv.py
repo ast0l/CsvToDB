@@ -1,7 +1,6 @@
-import csv as c
+import csv
 import json
 import re
-import os
 
 
 class Csv:
@@ -13,10 +12,21 @@ class Csv:
         :param quotechar:
         """
         # check path validity
-        if re.match(r'^[aA-zZ]:\\$', file_absolute_path[:3], re.MULTILINE) and re.match(r'\.csv$', file_absolute_path[:-4], re.MULTILINE):
+        disk = re.match(r'^[aA-zZ]:\\$', file_absolute_path[:3], re.MULTILINE)  # check if path begin with disk
+        file_ext = re.match(r'\.csv$', file_absolute_path[-4:], re.MULTILINE)  # check if file ext is csv
+
+        if disk and file_ext:
             self.__file = file_absolute_path
         else:
             raise ValueError('Incorrect file path')
+
+        # get the content of the file
+        try:
+            with open(self.__file, 'r') as csv_file:
+                self.__content = csv.reader(csv_file, delimiter=delimiter, quotechar=quotechar)
+                csv_file.close()
+        except FileNotFoundError:
+            raise FileNotFoundError('can\'t find your csv file')
 
         self.__delimiter: str = delimiter
         self.__quotechar: str = quotechar
