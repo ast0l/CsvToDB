@@ -14,9 +14,9 @@ class Csv:
         self.__delimiter: str = delimiter
         self.__quotechar: str = quotechar
         self.__content: dict = {
-            "column": None,
-            "column_name": None,
+            "total_column": None,
             "total_rows": None,
+            "column_name": None,
             "rows": [],
         }
 
@@ -32,13 +32,13 @@ class Csv:
         # get the content of the file
         try:
             total_rows: int = 0
-            total_column: int = 0
 
             with open(self.__file, 'r') as csv_file:
                 for row in csv.reader(csv_file, delimiter=delimiter, quotechar=quotechar):
                     self.__content['rows'].append(row)
                     total_rows += 1  # for total rows
                 csv_file.close()
+            total_rows -= 1
 
             # get total of column
             if self.__content['rows']:
@@ -47,12 +47,10 @@ class Csv:
                 del self.__content['rows'][0]
 
                 # set info about column
-                self.__content['column'] = len(column)
+                self.__content['total_column'] = len(column)
                 self.__content['column_name'] = column
 
             self.__content['total_rows'] = total_rows
-
-            print(self.__content)
         except FileNotFoundError:
             raise FileNotFoundError('can\'t find your csv file')
 
@@ -64,27 +62,22 @@ class Csv:
         return total column in the csv
         :return: int
         """
-        return self.__content['column']
+        return self.__content['total_column']
 
-
-    def row_list(self, limit: int = 0) -> tuple:
+    def get_rows(self, amount: int = None) -> list:
         """
-        get list of row:\n
-        limit = 1 return the first row\n
-        limit = 2 return the first two rows\n
-        etc...\n
-        and start at the first data row
-
-        :return:
+        return amount of rows (all by default)
+        :return tuple:
         """
-        if limit > 0:
-            return tuple(c.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                  delimiter=self.__delimiter,
-                                  quotechar=self.__quoter))[1:limit + 1]
+        rows: list = self.__content['rows']
+
+        if amount is not None:
+            if amount <= self.__content['total_rows']:
+                print(rows[:amount])
+            else:
+                raise ValueError(f'the amount must be equal of less than {len(rows)}')
         else:
-            return tuple(c.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                  delimiter=self.__delimiter,
-                                  quotechar=self.__quoter))[1:]
+            return rows
 
     def column_name(self) -> tuple:
         """
