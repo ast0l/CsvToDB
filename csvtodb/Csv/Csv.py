@@ -79,22 +79,20 @@ class Csv:
         else:
             return rows
 
-    def column_name(self) -> tuple:
+    def get_col_name(self) -> list:
         """
         return name of column
         :return:
         """
-        column: tuple = tuple(c.reader(open(self.__file, 'r'), delimiter=self.__delimiter, quotechar=self.__quoter))[0]
-        return tuple(column)
+        return self.__content['column_name']
 
-    def total_row(self) -> int:
+    def get_total_rows(self) -> int:
         """
         return total of row
 
         :return:
         """
-        return len(tuple(c.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                  delimiter=self.__delimiter, quotechar=self.__quoter)))
+        return self.__content['total_rows']
 
     def update_column_name(self, old, new):
         """
