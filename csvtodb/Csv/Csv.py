@@ -11,6 +11,15 @@ class Csv:
         :param delimiter:
         :param quotechar:
         """
+        self.__delimiter: str = delimiter
+        self.__quotechar: str = quotechar
+        self.__content: dict = {
+            "column": None,
+            "column_name": None,
+            "total_rows": None,
+            "rows": [],
+        }
+
         # check path validity
         disk = re.match(r'^[aA-zZ]:\\$', file_absolute_path[:3], re.MULTILINE)  # check if path begin with disk
         file_ext = re.match(r'\.csv$', file_absolute_path[-4:], re.MULTILINE)  # check if file ext is csv
@@ -22,14 +31,30 @@ class Csv:
 
         # get the content of the file
         try:
+            total_rows: int = 0
+            total_column: int = 0
+
             with open(self.__file, 'r') as csv_file:
-                self.__content = csv.reader(csv_file, delimiter=delimiter, quotechar=quotechar)
+                for row in csv.reader(csv_file, delimiter=delimiter, quotechar=quotechar):
+                    self.__content['rows'].append(row)
+                    total_rows += 1  # for total rows
                 csv_file.close()
+
+            # get total of column
+            if self.__content['rows']:
+                # get column
+                column = self.__content['rows'][0]
+                del self.__content['rows'][0]
+
+                # set info about column
+                self.__content['column'] = len(column)
+                self.__content['column_name'] = column
+
+            self.__content['total_rows'] = total_rows
+
+            print(self.__content)
         except FileNotFoundError:
             raise FileNotFoundError('can\'t find your csv file')
-
-        self.__delimiter: str = delimiter
-        self.__quotechar: str = quotechar
 
     def __repr__(self):
         return 'class for editing or reading csv data'
@@ -39,9 +64,8 @@ class Csv:
         return total column in the csv
         :return: int
         """
-        with open(self.__file, 'r') as f:
-            for r in c.reader(f, delimiter=self.__delimiter, quotechar=self.__quotechar):
-                return len(r)
+        return self.__content['column']
+
 
     def row_list(self, limit: int = 0) -> tuple:
         """
