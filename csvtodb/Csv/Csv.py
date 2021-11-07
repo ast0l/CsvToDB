@@ -94,89 +94,39 @@ class Csv:
         """
         return self.__content['total_rows']
 
-    def update_column_name(self, old, new):
+    def update_column_name(self, actual_name: str, new_name: str) -> bool:
         """
-        set the name of one or more column\n
-
-        **old:**\n
-        column name to change in the csv_file, if you want change
-        only one name it must be str and if you want to change name of multiple column
-        it must be tuple\n
-
-        **new:**\n
-        new is the new column name, if you have precise str in actual this param must be str else
-        this param must be tuple\n
-
-        :return:
+        update column name
+        :return bool:
         """
-        # check if param are correct
-        if (type(old) is not str and type(old) is not tuple) or (type(new) is not str and type(new) is not tuple):
-            raise TypeError('actual and new must be str or tuple')
+        column: list = self.__content['column_name']
 
-        # check if param match
-        if type(old) is str and type(new) is not str:
-            raise TypeError('new must be str')
-        elif type(old) is tuple:
-            if type(new) is not tuple:
-                raise TypeError('new must be tuple')
-            # check if same number elem in each tuple
-            if len(old) == len(new):
-                for value in old:
-                    if type(value) is not str:
-                        raise TypeError('tuple for actual must contain only str')
-                for value in new:
-                    if type(value) is not str:
-                        raise TypeError('tuple for new must contain only str')
-            else:
-                raise ValueError('You must have the same element in both tuples')
+        # check actual name exist
+        if actual_name in column:
+            column[column.index(actual_name)] = new_name  # set the new name
+            try:
+                self.__override_file()
+                return True
+            except csv.Error as e:
+                raise
+        else:
+            raise ValueError(f'{actual_name} doesn\'t exist in the actual value')
 
-        try:
-            # get value
-            csv_data = list(csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'),
-                                       delimiter=self.__delimiter, quotechar=self.__quoter))
-
-            # change value
-            if isinstance(old, str):
-                for name in csv_data[0]:
-                    if name == old:
-                        i: int = csv_data[0].index(name)
-                        csv_data[0][i] = new
-                        del i
-            else:
-                for name in csv_data[0]:
-                    if name in old:
-                        csv_data[0][csv_data[0].index(name)] = new[old.index(name)]
-
-            # write value
-            csv.writer(open(f'{self.__filepath}/{self.__filename}', 'w', newline='')).writerows(csv_data)
-            del csv_data, name
-        except csv.Error as e:
-            print(f'Error with the csv_file: {e}')
-
-    def new_row(self, data: list, start: bool = False):
+    def add_new_row(self, new_row: list) -> bool:
         """
-        insert new row in the csv_file\n
-
-        **data:**\n
-        data represent the data you want to insert in the row
-
-        **start:**\n
-        default is False, set it to True if you want insert row at the start of file
-        (after the first row which define column)\n
-
+        insert new row in the csv
         :return:
         """
         try:
-            csv_data: list = list(
-                csv.reader(open(f'{self.__filepath}/{self.__filename}', 'r'), delimiter=self.__delimiter,
-                           quotechar=self.__quoter))
-            if len(data) == len(csv_data[0]):
-                csv_data.append(data) if not start else csv_data.insert(1, data)
+            # check if all col are fill
+            if len(new_row) == self.__content['total_column']:
+                self.__content['rows'].append(new_row)
+                self.__override_file()
+                return True
             else:
-                raise ValueError(f'your data list must have {len(csv_data[0])} column')
-            csv.writer(open(f'{self.__filepath}/{self.__filename}', 'w', newline='')).writerows(csv_data)
+                raise ValueError(f'you must have {self.__content["total_column"]} element in your list')
         except csv.Error as e:
-            print(e)
+            raise csv.Error(f'something wrong happen with csv module {e}')
 
     def to_json(self, path: str, filename: str, get_col_name: bool = False, key_on_value: bool = False) -> bool:
         """
@@ -247,6 +197,27 @@ class Csv:
         data[0] = [re.sub(r' ', '_', data[0][i], 0, re.MULTILINE) for i in range(0, len(data[0]))]
         csv.writer(open(f'{self.__filepath}/{self.__filename}.csv', 'w', newline='')).writerows(data)
 
+    def __override_file(self):
+        """
+        write in file value contain in self.__content['rows']
+        :return:
+        """
+        try:
+            self.__content['rows'].insert(0, self.__content['column_name'])  # add column name
+
+            with open(self.__file, 'w', newline='') as f:
+                csv.writer(f).writerows(self.__content['rows'])
+                f.close()
+
+            del self.__content['rows'][0]  # remove column name
+        except csv.Error:
+            raise csv.Error('something wrong happened when trying to override file')
+
+    """
+    ==================================================
+    getter & setter
+    ==================================================
+    """
     def set_filepath(self, filepath: str):
         """
         set file to use
