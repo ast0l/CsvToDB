@@ -33,24 +33,27 @@ class Csv:
         try:
             total_rows: int = 0
 
+            # add all rows in the file
             with open(self.__file, 'r') as csv_file:
                 for row in csv.reader(csv_file, delimiter=delimiter, quotechar=quotechar):
                     self.__content['rows'].append(row)
                     total_rows += 1  # for total rows
                 csv_file.close()
-            total_rows -= 1
+            total_rows -= 1  # remove 1 for column
 
             # get total of column
             if self.__content['rows']:
                 # get column
                 column = self.__content['rows'][0]
-                del self.__content['rows'][0]
+                del self.__content['rows'][0]  # remove column from the rows
 
                 # set info about column
                 self.__content['total_column'] = len(column)
                 self.__content['column_name'] = column
+                self.__format_column_name()
 
             self.__content['total_rows'] = total_rows
+            print()
         except FileNotFoundError:
             raise FileNotFoundError('can\'t find your csv file')
 
@@ -105,6 +108,7 @@ class Csv:
         if actual_name in column:
             column[column.index(actual_name)] = new_name  # set the new name
             try:
+                self.__format_column_name()
                 self.__override_file()
                 return True
             except csv.Error as e:
@@ -128,74 +132,21 @@ class Csv:
         except csv.Error as e:
             raise csv.Error(f'something wrong happen with csv module {e}')
 
-    def to_json(self, path: str, filename: str, get_col_name: bool = False, key_on_value: bool = False) -> bool:
-        """
-        create json file with data from csv_file, return True if the file already exist return False\n
-
-        **_filename:**\n
-        _filename represent the name to use when file is create\n
-
-        **path:**\n
-        path is where to save the file\n
-
-        **get_col_name:**\n
-        add column name in the json\n
-
-        **key_on_value:**\n
-        This will refer each value in each row with for key the corresponding column\n
-
-        :param path: str
-        :param filename: str
-        :param get_col_name: bool
-        :param key_on_value: bool
-        :return: bool
-        """
-        try:
-            with open(f'{self.__filepath}/{self.__filename}', 'r') as file:
-                csv_data: list = list(csv.reader(file, delimiter=self.__delimiter, quotechar=self.__quoter))
-                total: int = 1
-                # check if need col name
-                if get_col_name:
-                    data: dict = {'column': csv_data[0]}
-                else:
-                    data: dict = {}
-
-                # check if need key on value
-                if key_on_value:
-                    column: list = csv_data[0]
-                    del csv_data[0]
-                    for elem in csv_data:
-                        row: dict = {}
-                        for value in elem:
-                            row[column[elem.index(value)]] = value
-                        data[total] = row
-                        total += 1
-                else:
-                    del csv_data[0]
-                    for elem in csv_data:
-                        data[total] = elem
-                        total += 1
-            file.close()
-
-            with open(f'{path}/{filename}.json', 'x') as file:
-                json.dump(data, file)
-            file.close()
-
-            return True
-        except csv.Error as e:
-            print(f'error with your csv_file {e}')
-        except FileExistsError:
-            return False
-
-    def format_column_name(self):
+    def __format_column_name(self) -> bool:
         """
         format column name
-        :return:
+        replace whitespace with underscore
+        :return bool:
         """
-        data: list = list(csv.reader(open(f'{self.__filepath}/{self.__filename}.csv', 'r'),
-                                     delimiter=self.__delimiter, quotechar=self.__quoter))
-        data[0] = [re.sub(r' ', '_', data[0][i], 0, re.MULTILINE) for i in range(0, len(data[0]))]
-        csv.writer(open(f'{self.__filepath}/{self.__filename}.csv', 'w', newline='')).writerows(data)
+        column = self.__content['column_name']
+
+        for name in column:
+            column[column.index(name)] = name.replace(' ', '_')
+
+        self.__content['column_name'] = column
+
+        print(self.__content['column_name'])
+        return True
 
     def __override_file(self):
         """
