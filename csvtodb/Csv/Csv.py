@@ -97,6 +97,9 @@ class Csv:
         """
         return self.__content['total_rows']
 
+    def get_data(self) -> tuple:
+        return self.__content['column_name'], self.__content['rows']
+
     def update_column_name(self, actual_name: str, new_name: str) -> bool:
         """
         update column name
