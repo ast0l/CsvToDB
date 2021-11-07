@@ -1,13 +1,13 @@
 import csv
-import json
 import re
 
 
 class Csv:
-    def __init__(self, file_absolute_path: str, delimiter: str = ',', quotechar: str = '"'):
+    def __init__(self, absolute_filepath: str, delimiter: str = ',', quotechar: str = '"'):
         """
         file **must** be absolute path
-        :param file_absolute_path:
+
+        :param absolute_filepath:
         :param delimiter:
         :param quotechar:
         """
@@ -20,14 +20,8 @@ class Csv:
             "rows": [],
         }
 
-        # check path validity
-        disk = re.match(r'^[aA-zZ]:\\$', file_absolute_path[:3], re.MULTILINE)  # check if path begin with disk
-        file_ext = re.match(r'\.csv$', file_absolute_path[-4:], re.MULTILINE)  # check if file ext is csv
-
-        if disk and file_ext:
-            self.__file = file_absolute_path
-        else:
-            raise ValueError('Incorrect file path')
+        if self.__check_file_valid(file=absolute_filepath):
+            self.__file = absolute_filepath
 
         # get the content of the file
         try:
@@ -53,9 +47,11 @@ class Csv:
                 self.__format_column_name()
 
             self.__content['total_rows'] = total_rows
-            print()
+
         except FileNotFoundError:
             raise FileNotFoundError('can\'t find your csv file')
+        except csv.Error as e:
+            raise csv.Error(f'something wrgon happened with csv {e}')
 
     def __repr__(self):
         return 'class for editing or reading csv data'
@@ -76,7 +72,7 @@ class Csv:
 
         if amount is not None:
             if amount <= self.__content['total_rows']:
-                print(rows[:amount])
+                return rows[:amount]
             else:
                 raise ValueError(f'the amount must be equal of less than {len(rows)}')
         else:
@@ -148,7 +144,6 @@ class Csv:
 
         self.__content['column_name'] = column
 
-        print(self.__content['column_name'])
         return True
 
     def __override_file(self):
@@ -167,24 +162,38 @@ class Csv:
         except csv.Error:
             raise csv.Error('something wrong happened when trying to override file')
 
+    def __check_file_valid(self, file: str) -> bool:
+        """
+        check if the file is valid
+        :return:
+        """
+        disk = re.match(r'^[aA-zZ]:\\$', file[:3], re.MULTILINE)  # check if path begin with disk
+        file_ext = re.match(r'\.csv$', file[-4:], re.MULTILINE)  # check if file ext is csv
+
+        if disk and file_ext:
+            return True
+        else:
+            raise ValueError('Incorrect file path')
+
     """
     ==================================================
     getter & setter
     ==================================================
     """
-    def set_filepath(self, filepath: str):
+    def set_file(self, absolute_filepath: str):
         """
         set file to use
-        :param filepath:
+        :param absolute_filepath:
         """
-        self.__filepath = filepath
+        if self.__check_file_valid(absolute_filepath):
+            self.__file = absolute_filepath
 
-    def get_filepath(self) -> str:
+    def get_file(self) -> str:
         """
         return path or only _filename used
         :return: str
         """
-        return self.__filepath
+        return self.__file
 
     def set_delimiter(self, delimiter: str):
         """
@@ -214,6 +223,6 @@ class Csv:
         """
         return self.__quoter
 
-    p_filepath = property(fget=get_filepath, fset=set_filepath)
+    p_filepath = property(fget=get_file, fset=set_file)
     p_file_delimiter = property(fget=get_delimiter, fset=set_delimiter)
     p_file_quoter = property(fget=get_quoter, fset=set_quoter)
