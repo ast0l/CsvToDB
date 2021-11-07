@@ -223,6 +223,6 @@ class Csv:
         """
         return self.__quoter
 
-    p_filepath = property(fget=get_file, fset=set_file)
-    p_file_delimiter = property(fget=get_delimiter, fset=set_delimiter)
-    p_file_quoter = property(fget=get_quoter, fset=set_quoter)
+    file = property(fget=get_file, fset=set_file)
+    delimiter = property(fget=get_delimiter, fset=set_delimiter)
+    quotechar = property(fget=get_quoter, fset=set_quoter)
