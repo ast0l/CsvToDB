@@ -7,7 +7,7 @@ class Table:
         return 'interface to make sql table'
 
     @abc.abstractmethod
-    def _build_table(self, csv: Csv, engine: str, temporary: bool) -> str:
+    def _build(self, csv: Csv, engine: str, temporary: bool) -> str:
         """
         create new sql table
 

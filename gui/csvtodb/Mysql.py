@@ -25,7 +25,7 @@ class Mysql(MysqlDb):
         """
         try:
             with open(f'{save_in}/{db_name}.sql', 'x') as file:
-                file.write(cls._build_db(db_name=db_name, files=files, engine=engine))
+                file.write(cls._build(db_name=db_name, files=files, engine=engine))
             file.close()
             return True
         except FileExistsError:
