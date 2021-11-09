@@ -37,7 +37,7 @@ class LaravelTable(Table, LaravelColumn):
                     for i in columns[column]:
                         content: list = csv.column_content(column=i + 1)
                         name: str = content.pop(0)
-                        new_table += cls._decimal(column_value=content, column_name=name)
+                        new_table += cls._decimal()
                 elif column == 'string':
                     for i in columns[column]:
                         content: list = csv.column_content(column=i + 1)

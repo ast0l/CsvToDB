@@ -59,7 +59,7 @@ class LaravelColumn(Column):
         return column
 
     @classmethod
-    def _decimal(cls, column_value: list, column_name: str) -> str:
+    def _decimal(self) -> str:
         column: str = '\t\t\t$table->'
 
         range_value = (min(column_value), max(column_value))

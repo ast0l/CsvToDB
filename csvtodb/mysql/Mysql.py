@@ -1,8 +1,11 @@
+from abc import ABC
+
 from Csv import Csv
 from csvtodb.mysql.MysqlDb import MysqlDb
+from csvtodb.mysql.MysqlTable import Table
 
 
-class Mysql(MysqlDb):
+class Mysql(MysqlDb, ABC):
 
     def __init__(self, csv: list[Csv], engine: str = 'INNODB', credential: tuple = None):
         self.__csv: list[Csv] = csv
@@ -23,28 +26,14 @@ class Mysql(MysqlDb):
         file.close()
         return True
 
-    @classmethod
-    def new_table(cls, csv: Csv, filepath: str, filename: str, engine: str = 'INNODB',
-                  temporary: bool = False) -> bool:
+    def build_table(self) -> bool:
         """
-        create new table in file\n
-
-        **filepath:**\n
-        where to save the file\n
-
-        **_filename:**\n
-        name of the saved file\n
-
-        **return type:**\n
-        if all is ok (file created and content added) return true
-        else if there is any error return false
-
+        create new table for the specified file contained in the csv list
         :return: bool
         """
         pass
 
-    @classmethod
-    def new_tables(cls, filepath: str, filename: str, files: dict, engine: str = 'INNODB'):
+    def build_tables(self):
         """
         build multiple table from multiple csv file\n
 
@@ -66,8 +55,7 @@ class Mysql(MysqlDb):
         """
         pass
 
-    @classmethod
-    def new_seeder(cls, csv: Csv, filepath: str, filename: str):
+    def build_seeder(self):
         """
         build seeder from file
 

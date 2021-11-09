@@ -26,7 +26,7 @@ class MysqlTable(Table, MysqlColumn):
                         for i in columns[column]:
                             content: list = csv.column_content(column=i+1)
                             name: str = content.pop(0)
-                            res[i] = f'{cls._decimal(column_value=content, column_name=name)},\n'
+                            res[i] = f'{cls._decimal()},\n'
                     elif column == 'string':
                         for i in columns[column]:
                             content: list = csv.column_content(column=i+1)

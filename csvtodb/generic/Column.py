@@ -3,45 +3,28 @@ import abc
 
 class Column(abc.ABC):
 
+    def __init__(self, name: str, value: list):
+        self._name = name
+        self._value = value
+
     def __repr__(self):
-        return 'interface to make sql column'
+        return 'Method for building column'
 
-    @abc.abstractmethod
-    def _integer(self, column_value: list, column_name: str) -> str:
+    def _integer(self) -> str:
         """
-        create column for int value\n
-
-        **value:**\n
-        dict of all value in the selected column\n
-
-        **column_name**\n
-        name given to the column\n
-
-        :param column_value: dict
-        :param column_name: str
+        create integer number column
         :return: str
         """
         pass
 
-    @abc.abstractmethod
-    def _decimal(self, column_value: list, column_name: str) -> str:
+    def _decimal(self) -> str:
         """
-        create column for float value\n
-
-        **value:**\n
-        dict of all value in the selected column\n
-
-        **column_name**\n
-        name given to the column\n
-
-        :param column_value: dict
-        :param column_name: str
+        create column for decimal number
         :return: str
         """
         pass
 
-    @abc.abstractmethod
-    def _string(self, column_value: list, column_name: str, char_set: str, collation: str) -> str:
+    def _string(self) -> str:
         """
         create column for string value\n
 
@@ -65,24 +48,13 @@ class Column(abc.ABC):
         """
         pass
 
-    @abc.abstractmethod
-    def _date(self, column_value: list, column_name: str) -> str:
+    def _date(self) -> str:
         """
-        create column for date value\n
-
-        **value:**\n
-        dict of all value in the selected column\n
-
-        **column_name**\n
-        name given to the column\n
-
-        :param column_value: dict
-        :param column_name: str
+        create column for date value
         :return: str
         """
         pass
 
-    @abc.abstractmethod
     def _primary(self) -> str:
         """
         create the primary key
@@ -90,6 +62,15 @@ class Column(abc.ABC):
         """
         pass
 
-    @abc.abstractmethod
-    def _foreign(self, column_value: list, column_name: str) -> str:
+    def _foreign(self) -> str:
+        """
+        create foreign key
+        :return: str
+        """
+        pass
+
+    def __get_type(self):
+        """
+        get the type for column
+        """
         pass
