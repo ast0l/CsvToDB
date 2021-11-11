@@ -31,13 +31,41 @@ class MysqlColumn(Column):
 
     def __init__(self, name: str, value: list):
         super().__init__(name, value)
-        self.unsigned: bool = True
+        self.__type = self.__get_type()
+        self.__has_null: bool = False
 
     def __repr__(self):
         return 'create new column for mysql'
 
     def _integer(self) -> str:
-        pass
+        column: str = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
+        unsigned: bool = True
+
+        # check if unsigned and convert all value to int
+        for val in self._value:
+            index = self._value.index(val)
+            val = int(val)
+
+            if unsigned and val < 0:
+                unsigned = False
+
+            self._value[index] = val
+
+        max_val: int = max(self._value)
+
+        if unsigned:
+            for unsigned_val in self.__UNSIGNED:
+                if not max_val > self.__UNSIGNED[unsigned_val][1]:
+                    column += f'{unsigned_val.upper()}({self.__UNSIGNED[unsigned_val][1]})'
+                    break
+
+        else:
+            for signed_val in self.__SIGNED:
+                if self.__SIGNED[signed_val][0] < max_val > self.__SIGNED[signed_val][1]:
+                    column += f'{signed_val.upper()}({self.__SIGNED[signed_val][1]})'
+                    break
+
+        return column
 
     def _decimal(self) -> str:
         pass
@@ -48,23 +76,43 @@ class MysqlColumn(Column):
     def _date(self) -> str:
         pass
 
-    def _primary(self) -> str:
+    def _primary(self) -> bool:
         pass
 
     def _foreign(self) -> str:
         pass
 
-    def get_type(self):
-        # check if column is string or numeric value
-        try:
-            for value in self._value:
-                i = self._value.index(value)
-                value = int(value)
-                self._value[i] = value
+    def __get_type(self) -> str | float | int:
+        """
+        get the type of column
+        :return:
+        """
+        # check if numeric decimal or string value
+        for value in self._value:
+            if value:
+                if re.match(r'^[0-9]+(.|,)[0-9]+$', value, re.MULTILINE):
+                    return float()
 
-                if self.unsigned and value < 0:
-                    self.unsigned = False
+                try:
+                    int(value)
+                except ValueError:
+                    return str()
+            else:
+                self.__has_null = True
 
-            print('is int')
-        except ValueError:  # if value cant be transform into an int specified it to str
-            print('is string')
+        return int()
+
+    def build(self) -> str:
+        """
+        build column
+        :return str:
+        """
+        if isinstance(self.__type, str):
+            return self._string()
+
+        elif isinstance(self.__type, int):
+            print('int')
+            return self._integer()
+
+        elif isinstance(self.__type, float):
+            return self._decimal()

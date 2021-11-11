@@ -26,24 +26,7 @@ class Column(abc.ABC):
 
     def _string(self) -> str:
         """
-        create column for string value\n
-
-        **value:**\n
-        dict of all value in the selected column\n
-
-        **column_name**\n
-        name given to the column\n
-
-        **char_set**\n
-        Character set to use\n
-
-        **collation**\n
-        collation to use\n
-
-        :param column_value: dict
-        :param column_name: str
-        :param char_set: str
-        :param collation: str
+        create column for string value
         :return: str
         """
         pass
@@ -74,3 +57,9 @@ class Column(abc.ABC):
         get the type for column
         """
         pass
+
+    def build(self) -> str:
+        """
+        build the column
+        :return:
+        """
