@@ -41,24 +41,22 @@ class MysqlColumn(Column):
         column: str = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
         unsigned: bool = True
 
+        value_to_int: list = [int(i) for i in self._value if i]
+        max_val: int = max(value_to_int)
+
+        print(value_to_int)
+
         # check if unsigned and convert all value to int
-        for val in self._value:
-            index = self._value.index(val)
-            val = int(val)
-
-            if unsigned and val < 0:
+        for i in value_to_int:
+            if i < 0:
                 unsigned = False
-
-            self._value[index] = val
-
-        max_val: int = max(self._value)
+                break
 
         if unsigned:
             for unsigned_val in self.__UNSIGNED:
-                if not max_val > self.__UNSIGNED[unsigned_val][1]:
+                if  not max_val > self.__UNSIGNED[unsigned_val][1]:
                     column += f'{unsigned_val.upper()}({self.__UNSIGNED[unsigned_val][1]})'
                     break
-
         else:
             for signed_val in self.__SIGNED:
                 if self.__SIGNED[signed_val][0] < max_val > self.__SIGNED[signed_val][1]:
@@ -89,12 +87,12 @@ class MysqlColumn(Column):
         """
         # check if numeric decimal or string value
         for value in self._value:
-            if value:
-                if re.match(r'^[0-9]+(.|,)[0-9]+$', value, re.MULTILINE):
-                    return float()
 
+            if value:
                 try:
                     int(value)
+                    if re.match(r'^[0-9]+(.|,)[0-9]+$', value, re.MULTILINE):
+                        return float()
                 except ValueError:
                     return str()
             else:
