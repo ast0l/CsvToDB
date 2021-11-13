@@ -39,28 +39,18 @@ class MysqlColumn(Column):
 
     def _integer(self) -> str:
         column: str = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
-        unsigned: bool = True
-
         value_to_int: list = [int(i) for i in self._value if i]
         max_val: int = max(value_to_int)
 
-        print(value_to_int)
-
-        # check if unsigned and convert all value to int
-        for i in value_to_int:
-            if i < 0:
-                unsigned = False
-                break
-
-        if unsigned:
+        if min(value_to_int) < 0:
             for unsigned_val in self.__UNSIGNED:
-                if  not max_val > self.__UNSIGNED[unsigned_val][1]:
-                    column += f'{unsigned_val.upper()}({self.__UNSIGNED[unsigned_val][1]})'
+                if not max_val > self.__UNSIGNED[unsigned_val][1]:
+                    column += f'{unsigned_val.upper()}({self.__UNSIGNED[unsigned_val][1]}) UNSIGNED'
                     break
         else:
             for signed_val in self.__SIGNED:
                 if self.__SIGNED[signed_val][0] < max_val > self.__SIGNED[signed_val][1]:
-                    column += f'{signed_val.upper()}({self.__SIGNED[signed_val][1]})'
+                    column += f'{signed_val.upper()}({self.__SIGNED[signed_val][1]}) SIGNED'
                     break
 
         return column
