@@ -127,12 +127,18 @@ class MysqlColumn(Column):
         build column
         :return str:
         """
-        if isinstance(self.__type, str):
-            return self._string()
+        match self.__type:
+            case 'int':
+                return self._integer()
 
-        elif isinstance(self.__type, int):
-            print('int')
-            return self._integer()
+            case 'float':
+                return self._decimal()
 
-        elif isinstance(self.__type, float):
-            return self._decimal()
+            case 'str':
+                return self._string()
+
+            case 'date':
+                return self._date()
+
+            case _:
+                raise ValueError('Can\'t build column no type specified')
