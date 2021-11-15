@@ -106,10 +106,10 @@ class MysqlColumn(Column):
                 # check if date
                 if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
                     date += 1
+                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
+                    datetime += 1
                 elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                    date += 1
-                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                    date += 1
+                    timestamp += 1
 
             if date == total_val:
                 return 'date'
