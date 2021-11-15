@@ -31,7 +31,7 @@ class Column(abc.ABC):
         """
         pass
 
-    def _date(self) -> str:
+    def _date(self, date_type: str | None = None) -> str:
         """
         create column for date value
         :return: str

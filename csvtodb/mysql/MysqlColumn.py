@@ -26,13 +26,12 @@ class MysqlColumn(Column):
         'mediumtext': 2 ** 24,
         'longtext': 2 ** 32,
     }  # string type name: value
-    __DATE: tuple = ('DATE', 'DATETIME', 'TIME', 'YEAR', 'TIMESTAMP')  # date type name
+    __DATE: tuple = ('DATE', 'DATETIME', 'TIMESTAMP', 'TIME', 'YEAR')  # date type name
     __DECIMAL: tuple = ('FLOAT', 'DOUBLE')
 
     def __init__(self, name: str, value: list):
         super().__init__(name, value)
         self.__has_null: bool = False
-        self.date_format: str | None = None
         self.__type = self.__get_type()
 
     def __repr__(self):
@@ -63,8 +62,23 @@ class MysqlColumn(Column):
     def _string(self) -> str:
         pass
 
-    def _date(self) -> str:
-        pass
+    def _date(self, date_type: str | None = None) -> str:
+        column = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
+
+        match date_type:
+            case 'date':
+                column += self.__DATE[0]
+
+            case 'datetime':
+                column += self.__DATE[1]
+
+            case 'timestamp':
+                column += self.__DATE[2]
+
+            case _:
+                raise ValueError('Invalid date type')
+
+        return column
 
     def _primary(self) -> bool:
         pass
@@ -78,11 +92,6 @@ class MysqlColumn(Column):
         :return:
         """
         is_str: bool = False
-
-        # date format
-        date: int = 0
-        datetime: int = 0
-        timestamp: int = 0
 
         # check if numeric decimal or string value
         for value in self._value:
@@ -101,24 +110,39 @@ class MysqlColumn(Column):
 
         # check is the string can be date
         if is_str:
-            total_val = len(self._value)
-            for value in self._value:
-                # check if date
-                if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                    date += 1
-                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
-                    datetime += 1
-                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                    timestamp += 1
+            date_format: dict = {
+                "date": 0,
+                "datetime": 0,
+                "timestamp": 0,
+                "time": 0,
+                "year": 0,
+            }
 
-            if date == total_val:
-                return 'date'
-            elif datetime == total_val:
-                return 'datetime'
-            elif timestamp == total_val:
-                return 'timestamp'
-            else:
+            for value in self._value:
+                # date
+                if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                    date_format["date"] += 1
+
+                # datetime
+                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
+                    date_format["datetime"] += 1
+
+                # timestamp
+                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                    date_format["timestamp"] += 1
+
+                # time
+                elif re.match(r'^[0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
+                    date_format["time"] += 1
+
+            recurrent_format = max(date_format.values())
+
+            # if the most reccurent format is less than 50% of the total value in the row
+            # consider it like string and not date
+            if recurrent_format == 0 or recurrent_format < len(self._value)/2:
                 return 'str'
+            else:
+                return max(date_format)
 
         return 'int'
 
@@ -137,7 +161,7 @@ class MysqlColumn(Column):
             case 'str':
                 return self._string()
 
-            case 'date':
+            case 'date', 'datetime', 'timestamp':
                 return self._date()
 
             case _:
