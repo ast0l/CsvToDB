@@ -42,16 +42,19 @@ class MysqlColumn(Column):
         value_to_int: list = [int(i) for i in self._value if i]
         max_val: int = max(value_to_int)
 
-        if min(value_to_int) < 0:
-            for unsigned_val in self.__UNSIGNED:
-                if not max_val > self.__UNSIGNED[unsigned_val][1]:
-                    column += f'{unsigned_val.upper()}({self.__UNSIGNED[unsigned_val][1]}) UNSIGNED'
-                    break
+        if self._primary():
+            pass
         else:
-            for signed_val in self.__SIGNED:
-                if self.__SIGNED[signed_val][0] < max_val > self.__SIGNED[signed_val][1]:
-                    column += f'{signed_val.upper()}({self.__SIGNED[signed_val][1]}) SIGNED'
-                    break
+            if min(value_to_int) < 0:
+                for unsigned_val in self.__UNSIGNED:
+                    if not max_val > self.__UNSIGNED[unsigned_val][1]:
+                        column += f'{unsigned_val.upper()}({self.__UNSIGNED[unsigned_val][1]}) UNSIGNED'
+                        break
+            else:
+                for signed_val in self.__SIGNED:
+                    if self.__SIGNED[signed_val][0] < max_val > self.__SIGNED[signed_val][1]:
+                        column += f'{signed_val.upper()}({self.__SIGNED[signed_val][1]}) SIGNED'
+                        break
 
         return column
 
@@ -98,6 +101,9 @@ class MysqlColumn(Column):
         :return:
         """
         is_str: bool = False
+
+        if re.match(r'^fk_[aA-zZ]+_id$', self._name, re.MULTILINE):
+            return 'foreign'
 
         # check if numeric decimal or string value
         for value in self._value:
