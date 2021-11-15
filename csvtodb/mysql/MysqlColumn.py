@@ -75,6 +75,12 @@ class MysqlColumn(Column):
             case 'timestamp':
                 column += self.__DATE[2]
 
+            case 'time':
+                column += self.__DATE[3]
+
+            case 'year':
+                column += self.__DATE[4]
+
             case _:
                 raise ValueError('Invalid date type')
 
