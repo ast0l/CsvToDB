@@ -1,5 +1,5 @@
 import re
-from generic.Column import Column
+from csvtodb.generic.Column import Column
 
 
 class MysqlColumn(Column):
@@ -31,8 +31,9 @@ class MysqlColumn(Column):
 
     def __init__(self, name: str, value: list):
         super().__init__(name, value)
-        self.__type = self.__get_type()
         self.__has_null: bool = False
+        self.date_format: str | None = None
+        self.__type = self.__get_type()
 
     def __repr__(self):
         return 'create new column for mysql'
@@ -56,7 +57,8 @@ class MysqlColumn(Column):
         return column
 
     def _decimal(self) -> str:
-        pass
+        column: str = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} {self.__DECIMAL[1]}'
+        return column
 
     def _string(self) -> str:
         pass
@@ -70,25 +72,55 @@ class MysqlColumn(Column):
     def _foreign(self) -> str:
         pass
 
-    def __get_type(self) -> str | float | int:
+    def __get_type(self) -> str:
         """
         get the type of column
         :return:
         """
+        is_str: bool = False
+
+        # date format
+        date: int = 0
+        datetime: int = 0
+        timestamp: int = 0
+
         # check if numeric decimal or string value
         for value in self._value:
-
             if value:
                 try:
+                    # check if can be int or float
                     int(value)
                     if re.match(r'^[0-9]+(.|,)[0-9]+$', value, re.MULTILINE):
-                        return float()
+                        return 'float'
                 except ValueError:
-                    return str()
+                    # check if simple string or date format
+                    is_str = True
+                    break
             else:
                 self.__has_null = True
 
-        return int()
+        # check is the string can be date
+        if is_str:
+            total_val = len(self._value)
+            for value in self._value:
+                # check if date
+                if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                    date += 1
+                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                    date += 1
+                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                    date += 1
+
+            if date == total_val:
+                return 'date'
+            elif datetime == total_val:
+                return 'datetime'
+            elif timestamp == total_val:
+                return 'timestamp'
+            else:
+                return 'str'
+
+        return 'int'
 
     def build(self) -> str:
         """

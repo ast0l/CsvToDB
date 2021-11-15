@@ -1,6 +1,6 @@
 from abc import ABC
 
-from Csv import Csv
+from csvtodb.Csv.Csv import Csv
 from csvtodb.mysql.MysqlDb import MysqlDb
 from csvtodb.mysql.MysqlTable import Table
 
