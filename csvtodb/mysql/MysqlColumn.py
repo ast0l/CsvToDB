@@ -60,7 +60,17 @@ class MysqlColumn(Column):
         return column
 
     def _string(self) -> str:
-        pass
+        column = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
+        larger_value = max(self._value)
+
+        for i in self._value:
+            i = len(i)
+            if i < len(larger_value) or i > len(larger_value):
+                column += 'VARCHAR(255)'
+                return column
+
+        column += f'CHAR({len(larger_value)})'
+        return column
 
     def _date(self, date_type: str | None = None) -> str:
         column = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
