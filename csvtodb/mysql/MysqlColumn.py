@@ -178,7 +178,7 @@ class MysqlColumn(Column):
         check if col is foreign key
         :return:
         """
-        if re.match(r'^fk_[aA-zZ]+_id$', self.name, re.MULTILINE):
+        if re.match(r'^fk_[aA-zZ]+$', self.name, re.MULTILINE):
             try:
                 for i in self.value:
                     int(i)
@@ -201,7 +201,7 @@ class MysqlColumn(Column):
         check if primary
         :return:
         """
-        if re.match(r'^pk_[aA-zZ]$', self.name, re.MULTILINE):
+        if re.match(r'^pk_[aA-zZ]+$', self.name, re.MULTILINE):
             try:
                 for i in self.value:
                     int(i)
