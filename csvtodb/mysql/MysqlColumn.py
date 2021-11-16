@@ -32,7 +32,7 @@ class MysqlColumn(Column):
     def __init__(self, name: str, value: list):
         self.value = value
         self.name = name
-        self.__has_null: bool = self.__has_null()
+        self.__has_null: bool = self.has_null()
         self.type = self.__get_type()
 
     def __repr__(self):
@@ -138,20 +138,20 @@ class MysqlColumn(Column):
 
         if date[0]:
             return date[1]
-        elif self.__is_float():
+        elif self.is_float():
             return 'float'
-        elif self.__is_str():
+        elif self.is_str():
             return 'str'
-        elif self.__is_enum():
+        elif self.is_enum():
             return 'enum'
-        elif self.__is_foreign():
+        elif self.is_foreign():
             return 'fk'
-        elif self.__is_primary():
+        elif self.is_primary():
             return 'pk'
         else:
             return 'int'
 
-    def __is_float(self) -> bool:
+    def is_float(self) -> bool:
         """
         check if the value is float
         :return bool:
@@ -161,19 +161,17 @@ class MysqlColumn(Column):
                 return True
         return False
 
-    def __is_str(self) -> bool:
+    def is_str(self) -> bool:
         """
         check if is str
         :return:
         """
         for i in self.value:
-            try:
-                int(i)
-                return False
-            except ValueError:
+            if re.match(r'\D', i, re.MULTILINE):
                 return True
+        return False
 
-    def __is_foreign(self) -> bool:
+    def is_foreign(self) -> bool:
         """
         check if col is foreign key
         :return:
@@ -187,7 +185,7 @@ class MysqlColumn(Column):
             return True
         return False
 
-    def __is_enum(self) -> bool:
+    def is_enum(self) -> bool:
         """
         check if enum
         :return:
@@ -196,7 +194,7 @@ class MysqlColumn(Column):
             return True
         return False
 
-    def __is_primary(self) -> bool:
+    def is_primary(self) -> bool:
         """
         check if primary
         :return:
@@ -243,7 +241,7 @@ class MysqlColumn(Column):
 
         return max(date_format.values()) > len(self.value) / 2, max(date_format)
 
-    def __has_null(self) -> bool:
+    def has_null(self) -> bool:
         """
         check if has null
         :return:
