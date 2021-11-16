@@ -66,6 +66,29 @@ class MysqlColumnTest(unittest.TestCase):
         column = MysqlColumn(name='fk_name', value=[])
         self.assertEqual('fk', column.type)
 
+    """
+    ================================================
+    test build return for each type
+    ================================================
+    """
+    def test_build_float(self):
+        pass
+
+    def test_build_str(self):
+        pass
+
+    def test_build_int(self):
+        pass
+
+    def test_build_enum(self):
+        pass
+
+    def test_build_foreign(self):
+        pass
+
+    def test_build_primary(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
