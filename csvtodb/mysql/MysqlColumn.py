@@ -30,16 +30,17 @@ class MysqlColumn(Column):
     __DECIMAL: tuple = ('FLOAT', 'DOUBLE')
 
     def __init__(self, name: str, value: list):
-        super().__init__(name, value)
+        self.value = value
+        self.name = name
         self.__has_null: bool = self.__has_null()
-        self.__type = self.__get_type()
+        self.type = self.__get_type()
 
     def __repr__(self):
         return 'create new column for mysql'
 
     def _integer(self) -> str:
-        column: str = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
-        value_to_int: list = [int(i) for i in self._value if i]
+        column: str = f'{self.name} {"NULL" if self.__has_null else "NOT NULL"} '
+        value_to_int: list = [int(i) for i in self.value if i]
         max_val: int = max(value_to_int)
 
         if self._primary():
@@ -59,15 +60,15 @@ class MysqlColumn(Column):
         return column
 
     def _decimal(self) -> str:
-        column: str = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} {self.__DECIMAL[1]}'
+        column: str = f'{self.name} {"NULL" if self.__has_null else "NOT NULL"} {self.__DECIMAL[1]}'
         return column
 
     def _string(self) -> str:
-        column = f'{self._name} '
+        column = f'{self.name} '
 
         match self.__get_type():
             case 'char':
-                column += f'CHAR({len(max(self._value))})'
+                column += f'CHAR({len(max(self.value))})'
             case 'varchar':
                 column += f'VARCHAR(255)'
             case 'tinytext':
@@ -84,9 +85,9 @@ class MysqlColumn(Column):
         return column
 
     def _date(self) -> str:
-        column = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
+        column = f'{self.name} {"NULL" if self.__has_null else "NOT NULL"} '
 
-        match self.__type:
+        match self.type:
             case 'date':
                 column += self.__DATE[0]
 
@@ -113,14 +114,14 @@ class MysqlColumn(Column):
         :return str:
         """
         values = ''
-        for i in self._value:
+        for i in self.value:
             if i:
                 values += f'{i},'
             else:
                 raise ValueError('Enum value cant be null')
         del values[:-1]
 
-        return f'{self._name} ENUM({values})'
+        return f'{self.name} ENUM({values})'
 
     def _primary(self) -> bool:
         pass
@@ -155,7 +156,7 @@ class MysqlColumn(Column):
         check if the value is float
         :return bool:
         """
-        for i in self._value:
+        for i in self.value:
             if re.match(r'^[0-9]+(.|,)[0-9]+$', i, re.MULTILINE):
                 return True
         return False
@@ -165,7 +166,7 @@ class MysqlColumn(Column):
         check if is str
         :return:
         """
-        for i in self._value:
+        for i in self.value:
             try:
                 int(i)
                 return False
@@ -177,9 +178,9 @@ class MysqlColumn(Column):
         check if col is foreign key
         :return:
         """
-        if re.match(r'^fk_[aA-zZ]+_id$', self._name, re.MULTILINE):
+        if re.match(r'^fk_[aA-zZ]+_id$', self.name, re.MULTILINE):
             try:
-                for i in self._value:
+                for i in self.value:
                     int(i)
             except ValueError:
                 raise ValueError('Cant be foreign key string val spotted')
@@ -191,7 +192,7 @@ class MysqlColumn(Column):
         check if enum
         :return:
         """
-        if re.match(r'^enum_[aA-zZ]+$', self._name, re.MULTILINE):
+        if re.match(r'^enum_[aA-zZ]+$', self.name, re.MULTILINE):
             return True
         return False
 
@@ -200,9 +201,9 @@ class MysqlColumn(Column):
         check if primary
         :return:
         """
-        if re.match(r'^pk_[aA-zZ]$', self._name, re.MULTILINE):
+        if re.match(r'^pk_[aA-zZ]$', self.name, re.MULTILINE):
             try:
-                for i in self._value:
+                for i in self.value:
                     int(i)
             except ValueError:
                 raise ValueError('Column cant be primary key string value spotted')
@@ -223,7 +224,7 @@ class MysqlColumn(Column):
         }
 
         # check date format
-        for value in self._value:
+        for value in self.value:
             # date
             if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
                 date_format["date"] += 1
@@ -240,21 +241,21 @@ class MysqlColumn(Column):
             elif re.match(r'^[0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
                 date_format["time"] += 1
 
-        return max(date_format.values()) > len(self._value)/2, max(date_format)
+        return max(date_format.values()) > len(self.value) / 2, max(date_format)
 
     def __has_null(self) -> bool:
         """
         check if has null
         :return:
         """
-        return '' in self._value
+        return '' in self.value
 
     def build(self) -> str:
         """
         build column
         :return str:
         """
-        match self.__type:
+        match self.type:
             case 'int':
                 return self._integer()
 

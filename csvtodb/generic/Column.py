@@ -3,10 +3,6 @@ import abc
 
 class Column(abc.ABC):
 
-    def __init__(self, name: str, value: list):
-        self._name = name
-        self._value = value
-
     def __repr__(self):
         return 'Method for building column'
 

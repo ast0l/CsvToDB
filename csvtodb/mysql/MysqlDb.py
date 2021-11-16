@@ -1,4 +1,4 @@
-from generic.Database import Database
+from csvtodb.generic.Database import Database
 from abc import ABC, abstractmethod
 
 

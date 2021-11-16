@@ -1,8 +1,8 @@
 import re
 from abc import ABC
 
-from generic.Table import Table
-from mysql.MysqlColumn import MysqlColumn
+from csvtodb.generic.Table import Table
+from csvtodb.mysql.MysqlColumn import MysqlColumn
 from csvtodb.Csv import Csv
 
 
