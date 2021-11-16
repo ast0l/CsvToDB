@@ -71,26 +71,29 @@ SQL scripts to build table or create seeder for your database (you can build the
   - delimiter
   - quotechar
 
-## How to build your csv
+## How your csv must be format
 Your csv must respect some rules to be understandable correctly and for everything to works well
 
 ### Column name
-Column name whitespace needs to be replaced by **underscore** like => column_name
-method in this package can format them too
+Column name without undescore for spacing will be reformat like this and all number in name will be removed:
+````text
+original => column NAME 3
+reformat => column_name
+````
 
 ### Date type 
-The syntax for the date must be one of those to be detected like date:
+The syntax for the date must be one of those to be recognized as date:
 - dd/mm/yyyy 00:00:00
 - dd/mm/yyyy
 - yyyy
 - 00:00:00
 
 ### Number which have to be string
-Example for a product reference if you want it to be string value you have to add
-non-numeric value like => '456789132'
+Example for a product reference if you want it to be string value you have to single or double quote or
+any non-numeric value in the number
 
 ### Primary key
-generate automatically don't worry
+if you have primary key you must begin with this prefix **pk_**
 
 ### Foreign key
 For the foreign key column name must be => tableReference_id

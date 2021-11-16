@@ -31,7 +31,7 @@ class MysqlColumn(Column):
 
     def __init__(self, name: str, value: list):
         super().__init__(name, value)
-        self.__has_null: bool = False
+        self.__has_null: bool = self.__has_null()
         self.__type = self.__get_type()
 
     def __repr__(self):
@@ -83,10 +83,10 @@ class MysqlColumn(Column):
 
         return column
 
-    def _date(self, date_type: str | None = None) -> str:
+    def _date(self) -> str:
         column = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
 
-        match date_type:
+        match self.__type:
             case 'date':
                 column += self.__DATE[0]
 
@@ -133,10 +133,12 @@ class MysqlColumn(Column):
         get the type of column
         :return:
         """
-        if self.__is_float():
+        date = self.__is_date()
+
+        if date[0]:
+            return date[1]
+        elif self.__is_float():
             return 'float'
-        elif self.__is_date():
-            return 'date'
         elif self.__is_str():
             return 'str'
         elif self.__is_enum():
@@ -207,7 +209,7 @@ class MysqlColumn(Column):
             return True
         return False
 
-    def __is_date(self) -> bool:
+    def __is_date(self) -> tuple:
         """
         check if is date
         :return:
@@ -238,7 +240,14 @@ class MysqlColumn(Column):
             elif re.match(r'^[0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
                 date_format["time"] += 1
 
-        return max(date_format.values()) > len(self._value)/2
+        return max(date_format.values()) > len(self._value)/2, max(date_format)
+
+    def __has_null(self) -> bool:
+        """
+        check if has null
+        :return:
+        """
+        return '' in self._value
 
     def build(self) -> str:
         """
