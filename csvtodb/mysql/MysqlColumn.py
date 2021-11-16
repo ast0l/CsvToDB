@@ -63,7 +63,25 @@ class MysqlColumn(Column):
         return column
 
     def _string(self) -> str:
-        pass
+        column = f'{self._name} '
+
+        match self.__get_type():
+            case 'char':
+                column += f'CHAR({len(max(self._value))})'
+            case 'varchar':
+                column += f'VARCHAR(255)'
+            case 'tinytext':
+                column += 'TINYTEXT'
+            case 'text':
+                column += 'TEXT'
+            case 'mediumtext':
+                column += 'MEDIUMTEXT'
+            case 'longtext':
+                column += 'LONGTEXT'
+            case _:
+                raise ValueError('Incorrect string type')
+
+        return column
 
     def _date(self, date_type: str | None = None) -> str:
         column = f'{self._name} {"NULL" if self.__has_null else "NOT NULL"} '
@@ -89,6 +107,21 @@ class MysqlColumn(Column):
 
         return column
 
+    def __enum(self) -> str:
+        """
+        build column enum
+        :return str:
+        """
+        values = ''
+        for i in self._value:
+            if i:
+                values += f'{i},'
+            else:
+                raise ValueError('Enum value cant be null')
+        del values[:-1]
+
+        return f'{self._name} ENUM({values})'
+
     def _primary(self) -> bool:
         pass
 
@@ -100,63 +133,112 @@ class MysqlColumn(Column):
         get the type of column
         :return:
         """
-        is_str: bool = False
+        if self.__is_float():
+            return 'float'
+        elif self.__is_date():
+            return 'date'
+        elif self.__is_str():
+            return 'str'
+        elif self.__is_enum():
+            return 'enum'
+        elif self.__is_foreign():
+            return 'fk'
+        elif self.__is_primary():
+            return 'pk'
+        else:
+            return 'int'
 
+    def __is_float(self) -> bool:
+        """
+        check if the value is float
+        :return bool:
+        """
+        for i in self._value:
+            if re.match(r'^[0-9]+(.|,)[0-9]+$', i, re.MULTILINE):
+                return True
+        return False
+
+    def __is_str(self) -> bool:
+        """
+        check if is str
+        :return:
+        """
+        for i in self._value:
+            try:
+                int(i)
+                return False
+            except ValueError:
+                return True
+
+    def __is_foreign(self) -> bool:
+        """
+        check if col is foreign key
+        :return:
+        """
         if re.match(r'^fk_[aA-zZ]+_id$', self._name, re.MULTILINE):
-            return 'foreign'
+            try:
+                for i in self._value:
+                    int(i)
+            except ValueError:
+                raise ValueError('Cant be foreign key string val spotted')
+            return True
+        return False
 
-        # check if numeric decimal or string value
+    def __is_enum(self) -> bool:
+        """
+        check if enum
+        :return:
+        """
+        if re.match(r'^enum_[aA-zZ]+$', self._name, re.MULTILINE):
+            return True
+        return False
+
+    def __is_primary(self) -> bool:
+        """
+        check if primary
+        :return:
+        """
+        if re.match(r'^pk_[aA-zZ]$', self._name, re.MULTILINE):
+            try:
+                for i in self._value:
+                    int(i)
+            except ValueError:
+                raise ValueError('Column cant be primary key string value spotted')
+            return True
+        return False
+
+    def __is_date(self) -> bool:
+        """
+        check if is date
+        :return:
+        """
+        date_format: dict = {
+            "date": 0,
+            "datetime": 0,
+            "timestamp": 0,
+            "time": 0,
+            "year": 0,
+        }
+
+        # check date format
         for value in self._value:
-            if value:
-                try:
-                    # check if can be int or float
-                    int(value)
-                    if re.match(r'^[0-9]+(.|,)[0-9]+$', value, re.MULTILINE):
-                        return 'float'
-                except ValueError:
-                    # check if simple string or date format
-                    is_str = True
-                    break
-            else:
-                self.__has_null = True
+            # date
+            if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                date_format["date"] += 1
 
-        # check is the string can be date
-        if is_str:
-            date_format: dict = {
-                "date": 0,
-                "datetime": 0,
-                "timestamp": 0,
-                "time": 0,
-                "year": 0,
-            }
+            # datetime
+            elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
+                date_format["datetime"] += 1
 
-            for value in self._value:
-                # date
-                if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                    date_format["date"] += 1
+            # timestamp
+            elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
+                date_format["timestamp"] += 1
 
-                # datetime
-                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
-                    date_format["datetime"] += 1
+            # time
+            elif re.match(r'^[0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
+                date_format["time"] += 1
 
-                # timestamp
-                elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                    date_format["timestamp"] += 1
-
-                # time
-                elif re.match(r'^[0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
-                    date_format["time"] += 1
-
-            recurrent_format = max(date_format.values())
-
-            # if the most reccurent format is less than 50% of the total value in the row
-            # consider it like string and not date
-            if recurrent_format == 0 or recurrent_format < len(self._value)/2:
-                return 'str'
-            else:
-                return max(date_format)
-
-        return 'int'
+        return max(date_format.values()) > len(self._value)/2
 
     def build(self) -> str:
         """
