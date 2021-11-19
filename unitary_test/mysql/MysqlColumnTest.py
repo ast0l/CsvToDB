@@ -119,7 +119,9 @@ class MysqlColumnTest(unittest.TestCase):
         self.assertEqual(result, column.build())
 
     def test_build_enum(self):
-        pass
+        column = MysqlColumn(name='col_name-enum', value=['small', 'medium', 'large'])
+        result = 'col_name ENUM(\'small\', \'medium\', \'large\')'
+        self.assertEqual(result, column.build())
 
     def test_build_foreign(self):
         column = MysqlColumn(name='fk_col_name-table', value=['1', '1', '1'])
