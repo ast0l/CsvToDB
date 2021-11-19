@@ -123,12 +123,15 @@ class MysqlColumnTest(unittest.TestCase):
 
     def test_build_foreign(self):
         column = MysqlColumn(name='fk_col_name-table', value=['1', '1', '1'])
-        result = 'col_name PRIMARY KEY AUTOINCREMENT UNSIGNED NOT NULL'
+        result = 'col_name INT,\n ' \
+                 'INDEX col_name_ind (col_name)\n' \
+                 'FOREIGN KEY (col_name)\n' \
+                 '\tREFERENCES table(id)\n'
         self.assertEqual(result, column.build())
 
     def test_build_primary(self):
         column = MysqlColumn(name='pk_col_name', value=['1', '1', '1'])
-        result = 'col_name PRIMARY KEY AUTOINCREMENT UNSIGNED NOT NULL'
+        result = 'col_name INT PRIMARY KEY AUTOINCREMENT UNSIGNED NOT NULL'
         self.assertEqual(result, column.build())
 
 
