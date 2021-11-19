@@ -6,88 +6,130 @@ class MysqlColumnTest(unittest.TestCase):
 
     """
     ================================================
-    test method to check type
+    test build returned for each type
     ================================================
     """
-    def test_is_int(self):
-        column = MysqlColumn(name='', value=['15', '16', '17', '18'])
-        self.assertEqual('int', column.type, 'test passed')  # add assertion here
 
-    def test_is_float(self):
-        column = MysqlColumn(name='', value=['15.23', '12,25', '45', '25'])
-        self.assertTrue(column.is_float())
+    # float
+    def test_build_notnull_float(self):
+        column = MysqlColumn(name='col_name', value=['45', '45.00', '48.00'])
+        result = 'col_name NOT NULL UNSIGNED DECIMAL(2,3)'
+        self.assertEqual(result, column.build())
 
-    def test_is_str(self):
-        column = MysqlColumn(name='', value=['45', '45.56', 'some text', 'test45'])
-        self.assertTrue(column.is_str())
+    def test_build_null_float(self):
+        column = MysqlColumn(name='col_name', value=['45', '45.00', ''])
+        result = 'col_name NULL UNSIGNED DECIMAL(2,3)'
+        self.assertEqual(result, column.build())
 
-    def test_is_enum(self):
-        column = MysqlColumn(name='enum_test', value=[])
-        self.assertTrue(column.is_enum())
+    def test_build_notnull_signed_float(self):
+        column = MysqlColumn(name='col_name', value=['-45', '45.00', '48.00'])
+        result = 'col_name NOT NULL SIGNED DECIMAL(2,3)'
+        self.assertEqual(result, column.build())
 
-    def test_is_pk(self):
-        column = MysqlColumn(name='pk_test', value=[])
-        self.assertTrue(column.is_primary())
+    def test_build_null_signed_float(self):
+        column = MysqlColumn(name='col_name', value=['45', '', '-48.00'])
+        result = 'col_name NULL SIGNED DECIMAL(2,3)'
+        self.assertEqual(result, column.build())
 
-    def test_is_foreign(self):
-        column = MysqlColumn(name='fk_name', value=[])
-        self.assertTrue(column.is_foreign())
+    # varchar
+    def test_build_notnull_varchar(self):
+        column = MysqlColumn(name='col_name', value=['45', '45.00', '48.00'])
+        result = 'col_name NOT NULL VARCHAR(255)'
+        self.assertEqual(result, column.build())
 
-    def test_has_null(self):
-        column = MysqlColumn(name='', value=['45', '', '50', '45y'])
-        self.assertTrue(column.has_null())
+    def test_build_null_varchar(self):
+        column = MysqlColumn(name='col_name', value=['45', '45.00', '48.00'])
+        result = 'col_name NULL VARCHAR(255)'
+        self.assertEqual(result, column.build())
 
-    """
-    ================================================
-    test type set for column
-    ================================================
-    """
-    def test_type_is_float(self):
-        column = MysqlColumn(name='', value=['45.25', '', '50,52', '54'])
-        self.assertEqual('float', column.type)
+    # char
+    def test_build_notnull_char(self):
+        column = MysqlColumn(name='col_name', value=['string', '45.00', '48'])
+        result = 'col_name NOT NULL VARCHAR(255)'
+        self.assertEqual(result, column.build())
 
-    def test_type_is_enum(self):
-        column = MysqlColumn(name='enum_name', value=[])
-        self.assertEqual('enum', column.type)
+    def test_build_null_char(self):
+        column = MysqlColumn(name='col_name', value=['string', 'string', 'string'])
+        result = 'col_name NULL CHAR(4)'
+        self.assertEqual(result, column.build())
 
-    def test_type_is_int(self):
-        column = MysqlColumn(name='', value=['45', '54', '58'])
-        self.assertEqual('int', column.type)
+    # text
+    def test_build_notnull_text(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', '45.00', '48'])
+        result = 'col_name NOT NULL TEXT'
+        self.assertEqual(result, column.build())
 
-    def test_type_is_str(self):
-        column = MysqlColumn(name='', value=['stre', '45', ''])
-        self.assertEqual('str', column.type)
+    def test_build_null_text(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', 'string', 'string'])
+        result = 'col_name NULL TEXT'
+        self.assertEqual(result, column.build())
 
-    def test_type_is_pk(self):
-        column = MysqlColumn(name='pk_name', value=[])
-        self.assertEqual('pk', column.type)
+    # tiny text
+    def test_build_notnull_tinytext(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', '45.00', '48'])
+        result = 'col_name NOT NULL TINYTEXT'
+        self.assertEqual(result, column.build())
 
-    def test_type_is_fk(self):
-        column = MysqlColumn(name='fk_name', value=[])
-        self.assertEqual('fk', column.type)
+    def test_build_null_tinytext(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', 'string', 'string'])
+        result = 'col_name NULL TINYTEXT'
+        self.assertEqual(result, column.build())
 
-    """
-    ================================================
-    test build return for each type
-    ================================================
-    """
-    def test_build_float(self):
-        pass
+    # medium text
+    def test_build_notnull_mediumtext(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', '45.00', '48'])
+        result = 'col_name NOT NULL MEDIUMTEXT'
+        self.assertEqual(result, column.build())
 
-    def test_build_str(self):
-        pass
+    def test_build_null_mediumtext(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', 'string', 'string'])
+        result = 'col_name NULL MEDIUMTEXT'
+        self.assertEqual(result, column.build())
 
-    def test_build_int(self):
-        pass
+    # long text
+    def test_build_notnull_longtext(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', '45.00', '48'])
+        result = 'col_name NOT NULL LONGTEXT'
+        self.assertEqual(result, column.build())
+
+    def test_build_null_longtext(self):  # change value
+        column = MysqlColumn(name='col_name', value=['string', 'string', 'string'])
+        result = 'col_name NULL LONGTEXT'
+        self.assertEqual(result, column.build())
+
+    # int
+    def test_build_notnull_int(self):
+        column = MysqlColumn(name='col_name', value=['45', '45', '48'])
+        result = 'col_name NOT NULL UNSIGNED INT'
+        self.assertEqual(result, column.build())
+
+    def test_build_null_int(self):
+        column = MysqlColumn(name='col_name', value=['45', '', '48'])
+        result = 'col_name NULL UNSIGNED INT'
+        self.assertEqual(result, column.build())
+
+    def test_build_notnull_signed_int(self):
+        column = MysqlColumn(name='col_name', value=['-45', '45', '48'])
+        result = 'col_name NOT NULL SIGNED INT'
+        self.assertEqual(result, column.build())
+
+    def test_build_null_signed_int(self):
+        column = MysqlColumn(name='col_name', value=['-45', '45', ''])
+        result = 'col_name NULL SIGNED INT'
+        self.assertEqual(result, column.build())
 
     def test_build_enum(self):
         pass
 
     def test_build_foreign(self):
-        pass
+        column = MysqlColumn(name='fk_col_name-table', value=['1', '1', '1'])
+        result = 'col_name PRIMARY KEY AUTOINCREMENT UNSIGNED NOT NULL'
+        self.assertEqual(result, column.build())
 
     def test_build_primary(self):
-        pass
+        column = MysqlColumn(name='pk_col_name', value=['1', '1', '1'])
+        result = 'col_name PRIMARY KEY AUTOINCREMENT UNSIGNED NOT NULL'
+        self.assertEqual(result, column.build())
 
 
 if __name__ == '__main__':

@@ -60,7 +60,7 @@ class MysqlColumn(Column):
         return column
 
     def _decimal(self) -> str:
-        column: str = f'{self.name} {"NULL" if self.__has_null else "NOT NULL"} {self.__DECIMAL[1]}'
+        column: str = f'{self.name} {"NULL" if self.__has_null else "NOT NULL"} {self.__DECIMAL[0]}'
         return column
 
     def _string(self) -> str:
