@@ -30,10 +30,13 @@ class MysqlColumn(Column):
     __DECIMAL: tuple = ('FLOAT', 'DOUBLE')
 
     def __init__(self, name: str, value: list):
+        self.name = None
+        self.type = None
+        self.table_reference = None
+        self.extract_type_name_from_title(name)
+
         self.value = value
-        self.name = name
         self.__has_null: bool = self.has_null()
-        self.type = self.__get_type()
 
     def __repr__(self):
         return 'create new column for mysql'
@@ -129,118 +132,6 @@ class MysqlColumn(Column):
     def _foreign(self) -> str:
         pass
 
-    def __get_type(self) -> str:
-        """
-        get the type of column
-        :return:
-        """
-        date = self.__is_date()
-
-        if date[0]:
-            return date[1]
-        elif self.is_float():
-            return 'float'
-        elif self.is_str():
-            return 'str'
-        elif self.is_enum():
-            return 'enum'
-        elif self.is_foreign():
-            return 'fk'
-        elif self.is_primary():
-            return 'pk'
-        else:
-            return 'int'
-
-    def is_float(self) -> bool:
-        """
-        check if the value is float
-        :return bool:
-        """
-        for i in self.value:
-            if re.match(r'^[0-9]+(.|,)[0-9]+$', i, re.MULTILINE):
-                return True
-        return False
-
-    def is_str(self) -> bool:
-        """
-        check if is str
-        :return:
-        """
-        for i in self.value:
-            if re.match(r'\D', i, re.MULTILINE):
-                return True
-        return False
-
-    def is_foreign(self) -> bool:
-        """
-        check if col is foreign key
-        :return:
-        """
-        if re.match(r'^fk_[aA-zZ]+$', self.name, re.MULTILINE):
-            try:
-                for i in self.value:
-                    int(i)
-            except ValueError:
-                raise ValueError('Cant be foreign key string val spotted')
-            return True
-        return False
-
-    def is_enum(self) -> bool:
-        """
-        check if enum
-        :return:
-        """
-        if re.match(r'^enum_[aA-zZ]+$', self.name, re.MULTILINE):
-            return True
-        return False
-
-    def is_primary(self) -> bool:
-        """
-        check if primary
-        :return:
-        """
-        if re.match(r'^pk_[aA-zZ]+$', self.name, re.MULTILINE):
-            try:
-                for i in self.value:
-                    int(i)
-            except ValueError:
-                raise ValueError('Column cant be primary key string value spotted')
-            return True
-        return False
-
-    def __is_date(self) -> tuple:
-        """
-        check if is date
-        :return:
-        """
-        date_format: dict = {
-            "date": 0,
-            "datetime": 0,
-            "timestamp": 0,
-            "time": 0,
-            "year": 0,
-        }
-
-        # check date format
-        for value in self.value:
-            # date
-            if re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                date_format["date"] += 1
-
-            # datetime
-            elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
-                date_format["datetime"] += 1
-
-            # timestamp
-            elif re.match(r'^[0-9]{4}-|/[0-9]{2}-|/[0-9]{2}$', value, re.MULTILINE):
-                date_format["timestamp"] += 1
-
-            # time
-            elif re.match(r'^[0-9]{2}:[0-9]{2}:[0-9]{2}$', value, re.MULTILINE):
-                date_format["time"] += 1
-
-        return max(date_format.values()) > len(self.value) / 2, max(date_format)
-
     def has_null(self) -> bool:
         """
         check if has null
@@ -268,3 +159,23 @@ class MysqlColumn(Column):
 
             case _:
                 raise ValueError('Can\'t build column no type specified')
+
+    def extract_type_name_from_title(self, col_name: str):
+        """
+        extract the name and type of column from the name
+        :return:
+        """
+        content = col_name.split('-')
+        content[0] = content[0].replace(' ', '_')
+
+        if re.match(r'^fk_', content[0], re.MULTILINE):
+            self.name = content[0].replace('fk_', '')
+            self.table_reference = content[1]
+
+        elif re.match(r'^pk_', content[0], re.MULTILINE):
+            self.name = content[0].replace('pk_', '')
+            self.type = content[1]
+
+        else:
+            self.name = content[0]
+            self.type = content[1]
